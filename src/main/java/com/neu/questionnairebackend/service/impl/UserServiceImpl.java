@@ -118,6 +118,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             log.info("login failed,userAccount cant match password");
             return null;
         }
+        User safeUser = this.getSafeUser(user);
+        //记录登录态,传入的是一个user数据！！！
+        request.getSession().setAttribute(USER_LOGIN_STATE,safeUser);
+        return safeUser;
+    }
+
+    private User getSafeUser(User user){
         User safeUser = new User();
         safeUser.setId(user.getId());
         safeUser.setUsername(user.getUsername());
@@ -129,8 +136,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         safeUser.setUserStatus(0);
         safeUser.setCreateTime(new Date());
         safeUser.setUserRole(user.getUserRole());
-        //记录登录态,传入的是一个user数据！！！
-        request.getSession().setAttribute(USER_LOGIN_STATE,safeUser);
         return safeUser;
     }
 }

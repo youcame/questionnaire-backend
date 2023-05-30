@@ -1,6 +1,7 @@
 package com.neu.questionnairebackend.service;
 import java.util.Date;
 
+import com.neu.questionnairebackend.model.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ public class UserServiceTest {
         User user = new User();
         user.setId(0L);
         user.setUsername("");
-        user.setpassword("");
+        user.setPassword("");
         user.setUserAccount("");
         user.setAvatarUrl("");
         user.setPhone("");

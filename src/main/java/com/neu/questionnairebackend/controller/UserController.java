@@ -59,11 +59,11 @@ public class UserController {
     }
 
     @PostMapping("/delete")
-    public boolean deleteUser(@RequestBody Long id, HttpServletRequest request) {
+    public boolean deleteUser(long id, HttpServletRequest request) {
         if(!isAdmin(request)){
             return false;
         }
-        if (id == null || id <= 0) {
+        if (id < 0) {
             return false;
         } else return userService.removeById(id);
     }
