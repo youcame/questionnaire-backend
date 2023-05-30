@@ -58,6 +58,7 @@ public class UserController {
         return userService.list(queryWrapper);
     }
 
+    //todo:尚未完成测试，传入参数存在问题。
     @PostMapping("/delete")
     public boolean deleteUser(long id, HttpServletRequest request) {
         if(!isAdmin(request)){
@@ -69,9 +70,6 @@ public class UserController {
     }
     private boolean isAdmin(HttpServletRequest request){
         User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
-        if(ADMIN_ROLE == user.getUserRole()){
-            return true;
-        }
-        return false;
+        return ADMIN_ROLE == user.getUserRole();
     }
 }
