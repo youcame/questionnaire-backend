@@ -38,6 +38,19 @@ public class UserController {
         return userService.userRegister(userRegisterRequest.getUserAccount(), userRegisterRequest.getPassword(), userRegisterRequest.getCheckPassword());
     }
 
+    @GetMapping("/currentUser")
+    public User getCurrentUser(HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute(USER_LOGIN_STATE);
+        if(user == null){
+            return  null;
+        }
+        else {
+            long id =user.getId();
+            User currentUser = userService.getById(id);
+            return currentUser;
+        }
+
+    }
     @PostMapping("/login")
     public User userRegister(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
