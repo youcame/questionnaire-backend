@@ -38,16 +38,17 @@ public class UserController {
         return userService.userRegister(userRegisterRequest.getUserAccount(), userRegisterRequest.getPassword(), userRegisterRequest.getCheckPassword());
     }
 
-    @GetMapping("/currentUser")
+    @GetMapping("/current")
     public User getCurrentUser(HttpServletRequest request){
         User user = (User)request.getSession().getAttribute(USER_LOGIN_STATE);
         if(user == null){
-            return  null;
+            return null;
         }
         else {
             long id =user.getId();
             User currentUser = userService.getById(id);
-            return currentUser;
+            //todo 校验用户是否合法
+            return userService.getSafeUser(currentUser);
         }
 
     }

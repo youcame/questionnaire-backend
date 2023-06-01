@@ -124,7 +124,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return safeUser;
     }
 
-    private User getSafeUser(User user){
+    @Override
+    public User getSafeUser(User user){
         if(user == null){
             return null;
         }
