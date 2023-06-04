@@ -142,6 +142,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         safeUser.setUserRole(user.getUserRole());
         return safeUser;
     }
+
+    @Override
+    public int userLogout(HttpServletRequest request) {
+        request.removeAttribute(USER_LOGIN_STATE);
+        return 1;
+    }
+
+    @Override
+    public boolean updateFrontUser(User user) {
+        long id = user.getId();
+        User changedUser = this.getById(id);
+        changedUser.setUserRole(user.getUserRole());
+        changedUser.setAvatarUrl(user.getAvatarUrl());
+        changedUser.setUserStatus(user.getUserStatus());
+        changedUser.setEmail(user.getEmail());
+        changedUser.setPhone(user.getPhone());
+        changedUser.setUsername(user.getUsername());
+        changedUser.setGender(user.getGender());
+        return this.updateById(changedUser);
+    }
 }
 
 

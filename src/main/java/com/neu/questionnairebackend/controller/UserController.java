@@ -1,6 +1,8 @@
 package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neu.questionnairebackend.common.BaseResponse;
+import com.neu.questionnairebackend.common.ResultUtil;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.domain.request.UserLoginRequest;
 import com.neu.questionnairebackend.model.domain.request.UserRegisterRequest;
@@ -31,11 +33,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public Long userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
-            return null;
+            return ResultUtil.failed(null);
         }
-        return userService.userRegister(userRegisterRequest.getUserAccount(), userRegisterRequest.getPassword(), userRegisterRequest.getCheckPassword());
+        long result = userService.userRegister(userRegisterRequest.getUserAccount(), userRegisterRequest.getPassword(), userRegisterRequest.getCheckPassword());
+        return ResultUtil.success(result);
     }
 
     @GetMapping("/current")
@@ -60,6 +63,14 @@ public class UserController {
         return userService.userLogin(userLoginRequest.getUserAccount(), userLoginRequest.getPassword(), request);
     }
 
+    @PostMapping("/logout")
+    public Integer userLogout(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        return userService.userLogout(request);
+    }
+
     @GetMapping("/search")
     public List<User> searchUsers(String username, HttpServletRequest request) {
         if(!isAdmin(request)){
@@ -82,6 +93,17 @@ public class UserController {
             return false;
         } else return userService.removeById(id);
     }
+
+    @PostMapping("/update")
+    public boolean updateUser(@RequestBody User user, HttpServletRequest request){
+        if(user == null){
+            return false;
+        }
+        else{
+            return userService.updateFrontUser(user);
+        }
+    }
+
     private boolean isAdmin(HttpServletRequest request){
         User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         return ADMIN_ROLE == user.getUserRole();
