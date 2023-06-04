@@ -4,6 +4,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import com.neu.questionnairebackend.model.domain.User;
+import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;;
@@ -60,11 +61,9 @@ public class UserServiceTest {
      */
     @Test
     void userUpdate(){
-        User user = new User();
+        ModifyUserRequest user = new ModifyUserRequest();
         user.setId(4L);
         user.setUsername("冰雪灬独舞");
-        user.setPassword("123");
-        user.setUserAccount("123");
         user.setAvatarUrl("123");
         user.setGender(0);
         user.setPhone("123");
@@ -75,5 +74,12 @@ public class UserServiceTest {
         User user1 =  userMapper.selectOne(queryWrapper);
         userService.updateFrontUser(user);
         Assertions.assertEquals("123",user1.getPhone());
+    }
+
+    @Test
+    void deleteUser(){
+        User user = new User();
+        user.setId(0L);
+        Assertions.assertTrue(userService.removeById(0L));
     }
 }

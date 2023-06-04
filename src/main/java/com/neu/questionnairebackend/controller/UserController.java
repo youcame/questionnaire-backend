@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.common.BaseResponse;
 import com.neu.questionnairebackend.common.ResultUtil;
 import com.neu.questionnairebackend.model.domain.User;
+import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 import com.neu.questionnairebackend.model.domain.request.UserLoginRequest;
 import com.neu.questionnairebackend.model.domain.request.UserRegisterRequest;
 import com.neu.questionnairebackend.service.UserService;
@@ -95,7 +96,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public boolean updateUser(@RequestBody User user, HttpServletRequest request){
+    public boolean updateUser(@RequestBody ModifyUserRequest user, HttpServletRequest request){
         if(user == null){
             return false;
         }

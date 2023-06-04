@@ -2,6 +2,7 @@ package com.neu.questionnairebackend.service;
 
 import com.neu.questionnairebackend.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,5 +40,5 @@ public interface UserService extends IService<User> {
      * @param request
      */
     int userLogout(HttpServletRequest request);
-    boolean updateFrontUser(User user);
+    boolean updateFrontUser(ModifyUserRequest user);
 }

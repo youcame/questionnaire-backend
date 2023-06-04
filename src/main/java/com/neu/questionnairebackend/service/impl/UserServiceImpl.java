@@ -3,6 +3,7 @@ package com.neu.questionnairebackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.model.domain.User;
+import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 import com.neu.questionnairebackend.service.UserService;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -150,7 +151,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public boolean updateFrontUser(User user) {
+    public boolean updateFrontUser(ModifyUserRequest user) {
         long id = user.getId();
         User changedUser = this.getById(id);
         changedUser.setUserRole(user.getUserRole());
