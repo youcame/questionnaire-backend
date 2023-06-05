@@ -81,13 +81,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         System.out.println(encryptPassword);
 
         //3.插入数据
+        queryWrapper = new QueryWrapper<>();
+        count = userMapper.selectCount(queryWrapper);
         User user = new User();
         user.setUserAccount(userAccount);
         user.setPassword(encryptPassword);
+        user.setId(count+1);
         boolean result = this.save(user);
         if (!result) {
             return -1;
         }
+        //todo:这里返回的id都是0，可能有问题
         return user.getId();
     }
 

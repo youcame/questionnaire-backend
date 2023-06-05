@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Data
 public class ModifyUserRequest implements Serializable {
 
-    private static final long serialVersionUID = 5471298693608039243L;
+    private static final long serialVersionUID = 1L;
     private long id;
     private String username;
     private String phone;
