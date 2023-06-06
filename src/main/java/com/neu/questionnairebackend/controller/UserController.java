@@ -1,8 +1,7 @@
 package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.neu.questionnairebackend.common.BaseResponse;
-import com.neu.questionnairebackend.common.ResultUtil;
+import com.neu.questionnairebackend.Authority.UserAuthority;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 import com.neu.questionnairebackend.model.domain.request.UserLoginRequest;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.neu.questionnairebackend.constant.UserConstant.ADMIN_ROLE;
 import static com.neu.questionnairebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
@@ -74,7 +72,7 @@ public class UserController {
 
     @GetMapping("/search")
     public List<User> searchUsers(String username, HttpServletRequest request) {
-        if(!isAdmin(request)){
+        if(!UserAuthority.isAdmin(request)){
             return new ArrayList<>();
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -87,7 +85,7 @@ public class UserController {
     //todo:尚未完成测试，传入参数存在问题。
     @PostMapping("/delete")
     public boolean deleteUser(@RequestBody Long id, HttpServletRequest request) {
-        if(!isAdmin(request)){
+        if(!UserAuthority.isAdmin(request)){
             return false;
         }
         if (id < 0) {
@@ -105,8 +103,4 @@ public class UserController {
         }
     }
 
-    private boolean isAdmin(HttpServletRequest request){
-        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
-        return ADMIN_ROLE == user.getUserRole();
-    }
 }

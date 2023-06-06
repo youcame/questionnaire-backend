@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.questionnairebackend.mapper.OptionMapper">
+
+    <resultMap id="BaseResultMap" type="com.neu.questionnairebackend.model.domain.Option">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="questionId" column="questionId" jdbcType="INTEGER"/>
+            <result property="isChoose" column="isChoose" jdbcType="INTEGER"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="totalTimes" column="totalTimes" jdbcType="INTEGER"/>
+            <result property="destination" column="destination" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,questionId,isChoose,
+        description,totalTimes,destination
+    </sql>
+</mapper>

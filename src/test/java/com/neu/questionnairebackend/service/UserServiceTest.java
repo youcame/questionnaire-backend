@@ -28,7 +28,7 @@ public class UserServiceTest {
      * 添加用户
      */
     @Test
-    public void testAddUser(){
+    void testAddUser(){
         User user = new User();
         user.setId(0L);
         user.setUsername("");
