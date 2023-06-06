@@ -86,7 +86,7 @@ public class UserController {
 
     //todo:尚未完成测试，传入参数存在问题。
     @PostMapping("/delete")
-    public boolean deleteUser(long id, HttpServletRequest request) {
+    public boolean deleteUser(@RequestBody Long id, HttpServletRequest request) {
         if(!isAdmin(request)){
             return false;
         }
