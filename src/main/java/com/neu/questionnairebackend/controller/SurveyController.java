@@ -28,10 +28,13 @@ public class SurveyController {
     private SurveyMapper surveyMapper;
 
     @GetMapping("/search")
-    public List<Survey> getSurveyList(String surveyName, HttpServletRequest request){
+    public List<Survey> getSurveyList(String surveyName, String surveyType, HttpServletRequest request){
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(surveyName)){
             queryWrapper.like("surveyName", surveyName);
+        }
+        if(StringUtils.isNotBlank(surveyType)){
+            queryWrapper.like("surveyType", surveyType);
         }
         return surveyService.list(queryWrapper);
     }

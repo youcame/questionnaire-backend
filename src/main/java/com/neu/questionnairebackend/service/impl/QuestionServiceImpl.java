@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author HUANG
 * @description 针对表【question】的数据库操作Service实现
-* @createDate 2023-06-06 15:58:09
+* @createDate 2023-06-07 16:33:36
 */
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
