@@ -71,11 +71,14 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<User> searchUsers(String username, HttpServletRequest request) {
+    public List<User> searchUsers(String userAccount, String username, HttpServletRequest request) {
         if(!UserAuthority.isAdmin(request)){
             return new ArrayList<>();
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(userAccount)) {
+            queryWrapper.like("userAccount", userAccount);
+        }
         if (StringUtils.isNotBlank(username)) {
             queryWrapper.like("username", username);
         }
