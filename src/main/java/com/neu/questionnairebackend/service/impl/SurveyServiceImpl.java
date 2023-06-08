@@ -1,10 +1,14 @@
 package com.neu.questionnairebackend.service.impl;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
 import com.neu.questionnairebackend.service.SurveyService;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
 * @author HUANG
@@ -15,6 +19,30 @@ import org.springframework.stereotype.Service;
 public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     implements SurveyService{
 
+    @Resource
+    private SurveyMapper surveyMapper;
+    @Override
+    public boolean updateFrontSurvey(ModifySurveyRequest survey) {
+        if(survey.getTotalTimes()<=0)return false;
+        if(survey != null) {
+            int id = survey.getId();
+            Survey frontSurvey = surveyMapper.selectById(id);
+            frontSurvey.setSurveyType(survey.getSurveyType());
+            frontSurvey.setSurveyName(survey.getSurveyName());
+            frontSurvey.setDescription(survey.getDescription());
+            //frontSurvey.setFinishUserId(0L);
+            frontSurvey.setSurveyStatus(0);
+            //frontSurvey.setUrl("");
+            //frontSurvey.setCanFinishTime(survey.getCanFinishTime());
+            frontSurvey.setTotalTimes(survey.getTotalTimes());
+            //frontSurvey.setNowTimes(0);
+            //frontSurvey.setCanFinishUserId(0L);
+            frontSurvey.setUpdateTime(new Date());
+            //frontSurvey.setDeleteTime(new Date());
+            return this.updateById(frontSurvey);
+        }
+        return false;
+    }
 }
 
 

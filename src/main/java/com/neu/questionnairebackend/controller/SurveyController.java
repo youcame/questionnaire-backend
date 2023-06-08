@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
 import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 import com.neu.questionnairebackend.service.SurveyService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,14 +50,14 @@ public class SurveyController {
         } else return surveyService.removeById(id);
     }
 
-//    @PostMapping("/update")
-//    public boolean updateUser(@RequestBody ModifySurveyRequest user, HttpServletRequest request){
-//        if(user == null){
-//            return false;
-//        }
-//        else{
-//            return surveyService.updateFrontUser(user);
-//        }
-//    }
+    @PostMapping("/update")
+    public boolean updateUser(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
+        if(survey == null || !UserAuthority.isAdmin(request)){
+            return false;
+        }
+        else{
+            return surveyService.updateFrontSurvey(survey);
+        }
+    }
 
 }

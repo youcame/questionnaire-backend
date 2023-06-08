@@ -2,6 +2,7 @@ package com.neu.questionnairebackend.service;
 
 import com.neu.questionnairebackend.model.domain.Survey;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
 
 /**
 * @author HUANG
@@ -10,4 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SurveyService extends IService<Survey> {
 
+    boolean updateFrontSurvey(ModifySurveyRequest survey);
 }
