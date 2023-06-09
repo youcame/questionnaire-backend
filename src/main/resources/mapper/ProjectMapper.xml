@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.questionnairebackend.mapper.ProjectMapper">
+
+    <resultMap id="BaseResultMap" type="com.neu.questionnairebackend.model.domain.Project">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="projectName" column="projectName" jdbcType="VARCHAR"/>
+            <result property="projectDescription" column="projectDescription" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="createBy" column="createBy" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="updateBy" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,projectName,projectDescription,
+        userId,createBy,createTime,
+        updateTime,updateBy
+    </sql>
+</mapper>

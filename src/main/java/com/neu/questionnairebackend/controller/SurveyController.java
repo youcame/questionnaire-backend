@@ -41,7 +41,7 @@ public class SurveyController {
     }
 
     @PostMapping("/delete")
-    public boolean deleteUser(int id, HttpServletRequest request) {
+    public boolean deleteSurvey(@RequestBody Integer id, HttpServletRequest request) {
         if(!UserAuthority.isAdmin(request)){
             return false;
         }
