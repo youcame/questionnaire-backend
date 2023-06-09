@@ -3,6 +3,7 @@ package com.neu.questionnairebackend.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
 import com.neu.questionnairebackend.model.domain.Project;
+import com.neu.questionnairebackend.model.domain.request.UserRegisterRequest;
 import com.neu.questionnairebackend.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,19 @@ public class ProjectController {
         } else {
             return projectService.updateById(project);
         }
+    }
+
+    @PostMapping("/create")
+    public Integer createProject(@RequestBody Project project, HttpServletRequest request) {
+        if (project == null) {
+            return null;
+        }
+        if(!UserAuthority.isAdmin(request)){
+            return null;
+        }
+        int result = projectService.createProject(project.getProjectName(),
+                project.getProjectDescription(), UserAuthority.getCurrentUserName(request), project.getUserId());
+        return result;
     }
 
 }

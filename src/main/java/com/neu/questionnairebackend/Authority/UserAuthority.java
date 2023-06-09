@@ -17,5 +17,9 @@ public class UserAuthority {
         return DEFAULT_ROLE == user.getUserRole();
     }
 
+    public static final String getCurrentUserName(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        return user.getUsername();
+    }
 
 }
