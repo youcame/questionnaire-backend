@@ -22,7 +22,6 @@ public class ProjectController {
 
     @Resource
     private ProjectService projectService;
-
     @GetMapping("/search")
     public List<Project> getProjectList(String projectName, HttpServletRequest request) {
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
@@ -33,7 +32,7 @@ public class ProjectController {
     }
 
     @PostMapping("/delete")
-    public boolean deleteProject(int id, HttpServletRequest request) {
+    public boolean deleteProject(@RequestBody Integer id, HttpServletRequest request) {
         if (!UserAuthority.isAdmin(request)) {
             return false;
         }

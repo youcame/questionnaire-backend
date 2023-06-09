@@ -9,5 +9,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-06-08 19:33:05
 */
 public interface ProjectService extends IService<Project> {
-
+    @Override
+    public boolean updateById(Project project);
 }
