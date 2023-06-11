@@ -66,14 +66,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         //检验两次密码是否相同
         if (!password.equals(checkPassword)) {
-            return -1;
+            return -2;
         }
         //检验是否有重复账户
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1;
+            return -3;
         }
 
         //2.加密
@@ -87,11 +87,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setUserAccount(userAccount);
         user.setPassword(encryptPassword);
         user.setId(count+1);
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
         boolean result = this.save(user);
         if (!result) {
-            return -1;
+            return -4;
         }
-        //todo:这里返回的id都是0，可能有问题
+        //todo:这里注册得到的id存在问题
         return user.getId();
     }
 

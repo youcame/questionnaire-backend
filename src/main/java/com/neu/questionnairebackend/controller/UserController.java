@@ -85,7 +85,6 @@ public class UserController {
         return userService.list(queryWrapper);
     }
 
-    //todo:尚未完成测试，传入参数存在问题。
     @PostMapping("/delete")
     public boolean deleteUser(@RequestBody Long id, HttpServletRequest request) {
         if(!UserAuthority.isAdmin(request)){

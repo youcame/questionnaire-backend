@@ -24,10 +24,13 @@ public class ProjectController {
     @Resource
     private ProjectService projectService;
     @GetMapping("/search")
-    public List<Project> getProjectList(String projectName, HttpServletRequest request) {
+    public List<Project> getProjectList(String projectName, String projectDescription, HttpServletRequest request) {
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(projectName)) {
             queryWrapper.like("projectName", projectName);
+        }
+        if (StringUtils.isNotBlank(projectDescription)) {
+            queryWrapper.like("projectDescription", projectDescription);
         }
         return projectService.list(queryWrapper);
     }
