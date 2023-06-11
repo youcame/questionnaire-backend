@@ -22,4 +22,9 @@ public class UserAuthority {
         return user.getUsername();
     }
 
+    public static final String getCurrentUserAccount(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        return user.getUserAccount();
+    }
+
 }

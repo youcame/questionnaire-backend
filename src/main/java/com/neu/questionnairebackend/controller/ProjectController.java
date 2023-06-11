@@ -60,7 +60,7 @@ public class ProjectController {
             return null;
         }
         int result = projectService.createProject(project.getProjectName(),
-                project.getProjectDescription(), UserAuthority.getCurrentUserName(request), project.getUserId());
+                project.getProjectDescription(), UserAuthority.getCurrentUserAccount(request), project.getUserId());
         return result;
     }
 

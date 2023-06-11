@@ -37,8 +37,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     @Override
     public int createProject(String projectName, String projectDescription, String creator, Long userId) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", creator);
+        queryWrapper.eq("userAccount", creator);
         Long result = userMapper.selectCount(queryWrapper);
+        System.out.println(result);
         if(result<=0)return -1;
         Project project = new Project();
         QueryWrapper<Project> queryWrapper1 = new QueryWrapper<>();
@@ -48,9 +49,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
         project.setProjectDescription(projectDescription);
         project.setCreateTime(new Date());
         project.setUpdateTime(new Date());
+//        project.setId(2);
         project.setId((int)(result1+1));
-        project.setUserId(userId);
-        this.save(project);
+        project.setUserId(1L);//todo:设置用户id
+        project.setUpdateBy(creator);
+        projectMapper.insert(project);
+
         return 1;
     }
 
