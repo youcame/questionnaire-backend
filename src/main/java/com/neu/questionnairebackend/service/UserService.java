@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 /**
 * @author HUANG
@@ -40,5 +41,19 @@ public interface UserService extends IService<User> {
      * @param request
      */
     int userLogout(HttpServletRequest request);
+
+    /**
+     *
+     * @param user
+     * @return
+     */
     boolean updateFrontUser(ModifyUserRequest user);
+
+//    /**
+//     *
+//     * @param id
+//     * @return 改写删除，把删除掉的id抹除掉
+//     */
+//    @Override
+//    public boolean removeById(Serializable id);
 }

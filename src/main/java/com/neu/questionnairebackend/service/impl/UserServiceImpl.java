@@ -13,6 +13,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -169,6 +170,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         changedUser.setGender(user.getGender());
         return this.updateById(changedUser);
     }
+
+
 }
 
 
