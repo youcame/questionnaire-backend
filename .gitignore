@@ -29,5 +29,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+#自定义
+./Webapp
+
 ### VS Code ###
 .vscode/
