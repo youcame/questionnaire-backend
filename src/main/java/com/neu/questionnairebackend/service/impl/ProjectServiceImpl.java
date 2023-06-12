@@ -49,12 +49,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
         project.setProjectDescription(projectDescription);
         project.setCreateTime(new Date());
         project.setUpdateTime(new Date());
-//        project.setId(2);
         project.setId((int)(result1+1));
         project.setUserId(1L);//todo:设置用户id
         project.setUpdateBy(creator);
         projectMapper.insert(project);
-
         return 1;
     }
 

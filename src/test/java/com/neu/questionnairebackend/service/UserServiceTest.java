@@ -79,7 +79,7 @@ public class UserServiceTest {
     @Test
     void deleteUser(){
         User user = new User();
-        user.setId(0L);
+        user.setId(3L);
         Assertions.assertTrue(userService.removeById(0L));
     }
 }

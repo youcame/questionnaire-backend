@@ -28,6 +28,13 @@ public class SurveyController {
     @Resource
     private SurveyMapper surveyMapper;
 
+    /**
+     *
+     * @param surveyName
+     * @param surveyType
+     * @param request
+     * @return  筛选之后的用户列表
+     */
     @GetMapping("/search")
     public List<Survey> getSurveyList(String surveyName, String surveyType, HttpServletRequest request){
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
@@ -40,6 +47,12 @@ public class SurveyController {
         return surveyService.list(queryWrapper);
     }
 
+    /**
+     *
+     * @param id
+     * @param request
+     * @return 删除的结果
+     */
     @PostMapping("/delete")
     public boolean deleteSurvey(@RequestBody Integer id, HttpServletRequest request) {
         if(!UserAuthority.isAdmin(request)){
@@ -50,6 +63,12 @@ public class SurveyController {
         } else return surveyService.removeById(id);
     }
 
+    /**
+     *
+     * @param survey
+     * @param request
+     * @return 更新的结果
+     */
     @PostMapping("/update")
     public boolean updateUser(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
         if(survey == null || !UserAuthority.isAdmin(request)){
