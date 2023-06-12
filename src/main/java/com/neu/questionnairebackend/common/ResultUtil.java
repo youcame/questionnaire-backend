@@ -5,7 +5,7 @@ public class ResultUtil {
         return new BaseResponse<T>(0,data,"ok");
     }
 
-    public static <T> BaseResponse<T> failed(T data){
-        return new BaseResponse<T>(1,data,"error");
+    public static BaseResponse error(ErrorCode errorCode){
+        return new BaseResponse<>(errorCode);
     }
 }
