@@ -14,12 +14,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public BaseResponse businessExceptionHandler(BusinessException e){
         log.info("RunTimeException:"+e.getMessage(), e);
-        return ResultUtil.error(e.getCode(),e.getMessage(), "");
+        return ResultUtil.error(e.getCode(),e.getMessage(), e.getDescription());
     }
 
     @ExceptionHandler
     public BaseResponse runTimeExceptionHandler(RuntimeException e){
         log.info("RunTimeException:", e);
-        return ResultUtil.error(ErrorCode.SYSTEM_ERROE,e.getMessage(), "");
+        return ResultUtil.error(ErrorCode.SYSTEM_ERROE,e.getMessage(), "系统内部出现了问题喵~");
     }
 }
