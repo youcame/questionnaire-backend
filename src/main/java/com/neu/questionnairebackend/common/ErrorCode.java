@@ -4,7 +4,8 @@ public enum ErrorCode {
     PARAM_ERROR(40000,"请求参数错误",""),
     NO_LOGIN(40100,"未登录",""),
     NO_AUTH(40101,"没权限", ""),
-    PARAM_NULL(40001,"请求得到的数据不存在","");
+    PARAM_NULL(40001,"请求得到的数据不存在",""),
+    SYSTEM_ERROE(50000, "系统内部异常", "");
     private int code;
     private String message;
     private String description;

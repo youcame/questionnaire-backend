@@ -1,0 +1,50 @@
+<!--该代码仅为示例代码，方便测试与完成任务，实际项目中使用的是react-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').submit(function(event) {
+                event.preventDefault();
+                var userAccount = $('#userAccount').val();
+                var password = $('#password').val();
+                var requestData = {
+                    userAccount: userAccount,
+                    password: password
+                };
+                $.ajax({
+                    url: '/user/login',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData)
+                })
+                .done(function(response) {
+                    // 登录成功
+                    if (response !== null && response !== undefined && response !== '') {
+                        window.location.href = "/project.html";
+                    } else {
+                        alert('登陆失败');
+                    }
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    alert('登陆失败');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h2>Login</h2>
+<form id="loginForm">
+    <label for="userAccount">User Account:</label>
+    <input type="text" id="userAccount" name="userAccount" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Login</button>
+</form>
+</body>
+</html>
