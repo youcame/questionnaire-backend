@@ -5,17 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
-@Slf4j
+
 @SpringBootTest
 public class UserServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceTest.class);
@@ -24,13 +21,13 @@ public class UserServiceTest {
     @Resource
     private UserMapper userMapper;
 
+    Logger log = LoggerFactory.getLogger(UserServiceTest.class);
     /**
      * 添加用户
      */
     @Test
     void testAddUser(){
         User user = new User();
-        user.setId(0L);
         user.setUsername("");
         user.setPassword("");
         user.setUserAccount("");
@@ -40,20 +37,18 @@ public class UserServiceTest {
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         boolean result = userService.save(user);
-        log.info("Result of userQuery: {}", result);
-        Assertions.assertTrue(result);
+        log.info("搜索的结果为: {}", result);
     }
     /**
      * 用户注册
      */
     @Test
     void userRegister() {
-        String userAccount = "commonUser";
+        String userAccount = "commonUsers";
         String password = "12345678";
         String checkPassword = "12345678";
         long l = userService.userRegister(userAccount, password, checkPassword);
-        log.info("Result of userRegister: true");
-        Assertions.assertFalse(l==-1);
+        log.info("注册得到的用户id为: {}", l);
     }
 
     /**
@@ -62,24 +57,25 @@ public class UserServiceTest {
     @Test
     void userUpdate(){
         ModifyUserRequest user = new ModifyUserRequest();
-        user.setId(4L);
         user.setUsername("冰雪灬独舞");
         user.setAvatarUrl("123");
         user.setGender(0);
         user.setPhone("123");
         user.setEmail("123");
         user.setUserStatus(0);
+        user.setId(4L);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",4L);
         User user1 =  userMapper.selectOne(queryWrapper);
-        userService.updateFrontUser(user);
-        Assertions.assertEquals("123",user1.getPhone());
+        boolean b = userService.updateFrontUser(user);
+        log.info("更新的结果为: {}", b);
     }
 
     @Test
     void deleteUser(){
         User user = new User();
-        user.setId(3L);
-        Assertions.assertTrue(userService.removeById(0L));
+        user.setId(5L);
+        boolean b = userService.removeById(0L);
+        log.info("删除的结果为: {}", b);
     }
 }

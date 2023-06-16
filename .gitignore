@@ -30,7 +30,7 @@ build/
 !**/src/test/**/build/
 
 #自定义
-./Webapp
+../Webapp
 
 ### VS Code ###
 .vscode/
