@@ -15,8 +15,7 @@ const fetchUserList = () => {
   }
   $.ajax({
     url: API_BASE_URL + '/user/search',
-    type: 'POST',
-    data: JSON.stringify(params),
+    type: 'GET',
     dataType: 'json',
     contentType: 'application/json',
     success(res) {
@@ -43,13 +42,10 @@ const fetchUserList = () => {
   })
 }
 const deleteUser = (id) => {
-  let params = {
-    id: id
-  }
   $.ajax({
     url: API_BASE_URL + '/user/delete',
     type: 'POST',
-    data: JSON.stringify(params),
+    data: JSON.stringify({id: id}),
     dataType: 'json',
     contentType: 'application/json',
     success(res) {

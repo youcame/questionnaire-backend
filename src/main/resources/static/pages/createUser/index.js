@@ -50,23 +50,23 @@ const handleCreateUser = () => {
  
   user.userAccount = $('#userAccount').val();
   user.password = $('#password').val();
-  user.startTime = $('#startDate').val() && new Date($('#startDate').val()).getTime();
-  user.stopTime = $('#endDate').val() && new Date($('#endDate').val()).getTime();
+  user.checkPassword = $('#password').val();
+
 
   // 修改
   if(user.id) {
 
     $.ajax({
-      url: API_BASE_URL + '/admin/modifyUserInfo',
+      url: API_BASE_URL + '/user/update',
       type: 'POST',
-      data: JSON.stringify(user),
+      data: user,
       dataType: 'json',
       contentType: 'application/json',
       success(res) {
-        if (res.code === "666") {
+        if (res) {
           location.href = '/pages/user/index.html'
         } else {
-          alert(res.message)
+          alert(res)
         }
       }
     })
@@ -74,43 +74,18 @@ const handleCreateUser = () => {
   } else {
     // 新建
     $.ajax({
-      url: API_BASE_URL + '/user/',
+      url: API_BASE_URL + '/user/register',
       type: 'POST',
       data: JSON.stringify(user),
       dataType: 'json',
       contentType: 'application/json',
       success(res) {
-        if (res.code === "666") {
+        if (res) {
           location.href = '/pages/user/index.html'
         } else {
-          alert(res.message)
+          alert(res)
         }
       }
     })
   }
-
-  // let params = {
-  //   userAccount: $('#userAccount').val(),
-  //   password: $('#password').val(),
-  //   startTime: $('#startDate').val() && new Date($('#startDate').val()).getTime(),
-  //   stopTime: $('#endDate').val() && new Date($('#endDate').val()).getTime()
-  // }
-  // if (!params.userAccount) return alert('账号不能为空！')
-  // if (!params.password) return alert('密码不能为空！')
-  // if (!params.startTime) return alert('开始时间不能为空！')
-  // if (!params.stopTime) return alert('结束时间不能为空！')
-  // $.ajax({
-  //   url: API_BASE_URL + '/admin/addUserInfo',
-  //   type: 'POST',
-  //   data: JSON.stringify(params),
-  //   dataType: 'json',
-  //   contentType: 'application/json',
-  //   success(res) {
-  //     if (res.code === "666") {
-  //       location.href = '/pages/user/index.html'
-  //     } else {
-  //       alert(res.message)
-  //     }
-  //   }
-  // })
 }

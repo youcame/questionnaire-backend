@@ -67,4 +67,13 @@ public class ProjectController {
         return result;
     }
 
+    @PostMapping("/findProject")
+    public Project findProjectById(@RequestBody Integer id){
+        if(id == null||id<=0) {
+            System.out.println(id);
+            return null;
+        }
+        return projectService.getById(id);
+    }
+
 }

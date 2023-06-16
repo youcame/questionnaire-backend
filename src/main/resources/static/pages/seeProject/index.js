@@ -11,16 +11,16 @@ const fetchProjectInfo = (id) => {
     id: id
   };
   $.ajax({
-    url: API_BASE_URL + '/project/search',
+    url: API_BASE_URL + '/project/findProject',
     type: 'POST',
-    data: JSON.stringify(params),
+    data: id,
     dataType: 'json',
     contentType: 'application/json',
     success(res) {
-      let info = res.data[0];
+      let info = res;
       console.log(info, 'res');
       $('#projectName').text(info.projectName);
-      $('#createTime').text(info.createDate);
+      $('#createTime').text(info.createTime);
       $('#projectDescription').text(info.projectDescription);
     }
   });
