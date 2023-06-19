@@ -1,14 +1,11 @@
 package com.neu.questionnairebackend.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
-import com.neu.questionnairebackend.controller.UserController;
 import com.neu.questionnairebackend.model.domain.User;
-import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
-import com.neu.questionnairebackend.model.domain.request.UserLoginRequest;
-import com.neu.questionnairebackend.model.domain.request.UserRegisterRequest;
+import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
+import com.neu.questionnairebackend.model.dto.UserLoginRequest;
+import com.neu.questionnairebackend.model.dto.UserRegisterRequest;
 import com.neu.questionnairebackend.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

@@ -3,7 +3,7 @@ package com.neu.questionnairebackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.model.domain.User;
-import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
+import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
 import com.neu.questionnairebackend.service.UserService;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.regex.Matcher;

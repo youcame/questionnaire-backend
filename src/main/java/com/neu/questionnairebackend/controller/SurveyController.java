@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
-import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
-import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
+import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import com.neu.questionnairebackend.service.SurveyService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +69,7 @@ public class SurveyController {
      * @return 更新的结果
      */
     @PostMapping("/update")
-    public boolean updateUser(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
+    public boolean updateSurvey(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
         if(survey == null || !UserAuthority.isAdmin(request)){
             return false;
         }
@@ -78,5 +77,8 @@ public class SurveyController {
             return surveyService.updateFrontSurvey(survey);
         }
     }
+
+    @PostMapping("/add")
+    public boolean addSurvey
 
 }

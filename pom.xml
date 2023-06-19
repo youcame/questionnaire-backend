@@ -109,7 +109,6 @@
             </goals>
             <configuration>
               <includes>
-                <include>com/neu/questionnairebackend/controller/*</include>
                 <include>com/neu/questionnairebackend/service/*</include>
                 <include>com/neu/questionnairebackend/service/impl/*</include>
               </includes>

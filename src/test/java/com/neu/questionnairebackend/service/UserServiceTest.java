@@ -4,7 +4,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import com.neu.questionnairebackend.model.domain.User;
-import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
+import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
 import org.junit.jupiter.api.Test;;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

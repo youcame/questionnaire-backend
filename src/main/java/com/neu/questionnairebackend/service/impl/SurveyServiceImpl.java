@@ -3,7 +3,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.model.domain.Survey;
-import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
+import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import com.neu.questionnairebackend.service.SurveyService;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import org.springframework.stereotype.Service;

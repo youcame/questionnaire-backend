@@ -1,19 +1,15 @@
 package com.neu.questionnairebackend.service;
 import java.util.Date;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
-import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
-import org.junit.jupiter.api.Assertions;
+import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class SurveyServiceTest {

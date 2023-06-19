@@ -1,4 +1,4 @@
-package com.neu.questionnairebackend.model.domain.request;
+package com.neu.questionnairebackend.model.dto;
 
 import lombok.Data;
 

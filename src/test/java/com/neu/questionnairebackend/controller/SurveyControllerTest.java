@@ -2,11 +2,9 @@ package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
-import com.neu.questionnairebackend.controller.SurveyController;
 import com.neu.questionnairebackend.model.domain.Survey;
-import com.neu.questionnairebackend.model.domain.request.ModifySurveyRequest;
+import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import com.neu.questionnairebackend.service.SurveyService;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

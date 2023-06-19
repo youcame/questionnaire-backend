@@ -2,10 +2,9 @@ package com.neu.questionnairebackend.service;
 
 import com.neu.questionnairebackend.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.neu.questionnairebackend.model.domain.request.ModifyUserRequest;
+import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 
 /**
 * @author HUANG
