@@ -30,15 +30,9 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             frontSurvey.setSurveyType(survey.getSurveyType());
             frontSurvey.setSurveyName(survey.getSurveyName());
             frontSurvey.setDescription(survey.getDescription());
-            //frontSurvey.setFinishUserId(0L);
             frontSurvey.setSurveyStatus(0);
-            //frontSurvey.setUrl("");
-            //frontSurvey.setCanFinishTime(survey.getCanFinishTime());
             frontSurvey.setTotalTimes(survey.getTotalTimes());
-            //frontSurvey.setNowTimes(0);
-            //frontSurvey.setCanFinishUserId(0L);
             frontSurvey.setUpdateTime(new Date());
-            //frontSurvey.setDeleteTime(new Date());
             return this.updateById(frontSurvey);
         }
         return false;

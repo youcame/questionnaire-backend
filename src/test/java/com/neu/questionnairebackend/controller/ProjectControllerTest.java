@@ -2,17 +2,15 @@ package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
-import com.neu.questionnairebackend.controller.ProjectController;
 import com.neu.questionnairebackend.model.domain.Project;
-import com.neu.questionnairebackend.model.domain.request.UserRegisterRequest;
 import com.neu.questionnairebackend.service.ProjectService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-//@SpringBootTest
+@Slf4j
 public class ProjectControllerTest {
 
     @Mock
@@ -75,7 +73,7 @@ public class ProjectControllerTest {
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(projectService.updateById(any())).thenReturn(true);
 
-        boolean result = projectController.updateUser(project, request);
+        boolean result = projectController.updateProject(project, request);
 
         assertTrue(result);
     }
@@ -93,5 +91,15 @@ public class ProjectControllerTest {
         assertEquals(Integer.valueOf(12345), result);
     }
 
+    @Test
+    public void testFindProjectById() {
+        Project project = new Project();
+        // 设置project的属性值
 
+        when(projectService.getById(any())).thenReturn(project);
+
+        Project result = projectController.findProjectById(12345);
+
+        assertEquals(project, result);
+    }
 }

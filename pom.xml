@@ -18,12 +18,6 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.jacoco</groupId>
-      <artifactId>org.jacoco.agent</artifactId>
-      <version>0.8.9</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
@@ -78,6 +72,10 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -93,92 +91,32 @@
           </excludes>
         </configuration>
       </plugin>
-<!--      <plugin>-->
-<!--        <groupId>org.jacoco</groupId>-->
-<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--        <version>0.8.9</version>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>default-prepare-agent</id>-->
-<!--            <goals>-->
-<!--              <goal>prepare-agent</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--          <execution>-->
-<!--            <id>default-report</id>-->
-<!--            <goals>-->
-<!--              <goal>report</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
-
-<!--      <plugin>-->
-<!--        <groupId>org.jacoco</groupId>-->
-<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--        <version>0.8.9</version>-->
-<!--        <configuration>-->
-<!--          <propertyName>jacocoArgLine</propertyName>-->
-<!--          <destFile>${project.build.directory}/jacoco.exec</destFile>-->
-<!--          <dataFile>${project.build.directory}/jacoco.exec</dataFile>-->
-<!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            &lt;!&ndash;            <id>default-prepare-agent</id>&ndash;&gt;-->
-<!--            <goals>-->
-<!--              <goal>prepare-agent</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--          <execution>-->
-<!--            <id>report</id>-->
-<!--            <phase>test</phase>-->
-<!--            <goals>-->
-<!--              <goal>report</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <includes>-->
-<!--                <include>com/neu/questionnairebackend/service/*</include>-->
-<!--                <include>com/neu/questionnairebackend/controller/*</include>-->
-<!--              </includes>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
-
-      <!-- 单元覆盖率插件-->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.9</version>
         <executions>
           <execution>
-            <id>pre-unit-test</id>
+            <id>default-prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <propertyName>jacocoArgLine</propertyName>
-            </configuration>
           </execution>
           <execution>
-            <id>post-unit-test</id>
-            <phase>package</phase>
+            <id>default-report</id>
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <includes>
+                <include>com/neu/questionnairebackend/controller/*</include>
+                <include>com/neu/questionnairebackend/service/*</include>
+                <include>com/neu/questionnairebackend/service/impl/*</include>
+              </includes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
-
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--        <version>2.22.2</version>-->
-<!--        <configuration>-->
-<!--          <skip>true</skip>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
     </plugins>
-
   </build>
 </project>

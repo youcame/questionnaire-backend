@@ -46,7 +46,7 @@ public class ProjectController {
     }
 
     @PostMapping("/update")
-    public boolean updateUser(@RequestBody Project project, HttpServletRequest request) {
+    public boolean updateProject(@RequestBody Project project, HttpServletRequest request) {
         if (project == null || !UserAuthority.isAdmin(request)) {
             return false;
         } else {
