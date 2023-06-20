@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.mapper.OptionMapper;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
-import com.neu.questionnairebackend.model.domain.Question;
 import com.neu.questionnairebackend.model.domain.Survey;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;

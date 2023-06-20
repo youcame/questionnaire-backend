@@ -19,7 +19,7 @@ public class Question implements Serializable {
      * 题目id
      */
     @TableId(type = IdType.AUTO)
-    private Object id;
+    private Integer id;
 
     /**
      * 对应的问卷id
@@ -29,7 +29,7 @@ public class Question implements Serializable {
     /**
      * 问题描述
      */
-    private String description;
+    private String questionDescription;
 
     /**
      * 类型 0-单选，1-多选
@@ -39,7 +39,7 @@ public class Question implements Serializable {
     /**
      * 一共被回答的次数，用于统计
      */
-    private Date totalTimes;
+    private Integer totalTimes;
 
     /**
      * 用户的答案
