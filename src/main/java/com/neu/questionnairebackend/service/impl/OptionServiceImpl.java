@@ -28,6 +28,7 @@ public class OptionServiceImpl extends ServiceImpl<OptionMapper, Option>
             Option option = new Option();
             option.setQuestionId(id);
             option.setDescription(optionRequest.getDestination());
+            option.setDestination(Integer.parseInt(optionRequest.getDestination()));
             optionMapper.insert(option);
         }
         return true;

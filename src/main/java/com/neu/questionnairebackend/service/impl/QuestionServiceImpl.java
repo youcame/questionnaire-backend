@@ -8,6 +8,7 @@ import com.neu.questionnairebackend.service.OptionService;
 import com.neu.questionnairebackend.service.QuestionService;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,6 +23,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     implements QuestionService{
     @Resource
     private OptionService optionService;
+    @Resource
+    private QuestionMapper questionMapper;
 
     @Override
     public boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId) {
@@ -32,6 +35,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             question.setSurveyId(surveyId);
             question.setDescription(questionRequest
                     .getQuestionDescription());
+            questionMapper.insert(question);
             optionService.createOptions(questionRequest.getOptions(), id);
             id++;
         }
