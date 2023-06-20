@@ -2,7 +2,11 @@ package com.neu.questionnairebackend.service;
 
 import com.neu.questionnairebackend.model.domain.Survey;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 /**
 * @author HUANG
@@ -13,5 +17,5 @@ public interface SurveyService extends IService<Survey> {
 
     boolean updateFrontSurvey(ModifySurveyRequest survey);
 
-    //boolean addSurvey()
+    boolean addSurvey(AddSurveyRequest addSurveyRequest, HttpServletRequest request);
 }

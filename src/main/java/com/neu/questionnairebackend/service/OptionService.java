@@ -2,6 +2,9 @@ package com.neu.questionnairebackend.service;
 
 import com.neu.questionnairebackend.model.domain.Option;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
+
+import java.util.List;
 
 /**
 * @author HUANG
@@ -9,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-06-06 15:58:09
 */
 public interface OptionService extends IService<Option> {
-
+    boolean createOptions(List<AddSurveyRequest.QuestionRequest.OptionRequest> optionRequests, int id);
 }

@@ -20,7 +20,7 @@ public class Survey implements Serializable {
     private Integer id;
 
     /**
-     * 问卷类型 0-正常问卷
+     * 问卷类型 0-正常问卷 1-限时问卷 2-限次问卷 3-面向群众
      */
     private Integer surveyType;
 

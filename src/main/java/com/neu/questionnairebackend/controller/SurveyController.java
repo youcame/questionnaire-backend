@@ -2,8 +2,11 @@ package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
+import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import com.neu.questionnairebackend.service.SurveyService;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +81,15 @@ public class SurveyController {
         }
     }
 
-    @PostMapping("/add")
-    public boolean addSurvey
+    @PostMapping("/create")
+    public boolean addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, HttpServletRequest request){
+        if(!UserAuthority.isAdmin(request)){
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        if(addSurveyRequest!=null){
+            surveyService.addSurvey(addSurveyRequest, request);
+        }
+        return true;
+    }
 
 }

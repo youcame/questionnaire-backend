@@ -73,7 +73,7 @@ public class SurveyControllerTest {
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(surveyService.updateFrontSurvey(any())).thenReturn(true);
 
-        boolean result = surveyController.updateUser(survey, request);
+        boolean result = surveyController.updateSurvey(survey, request);
 
         assertTrue(result);
     }
