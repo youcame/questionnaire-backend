@@ -92,4 +92,9 @@ public class SurveyController {
         return true;
     }
 
+    @GetMapping("/getById")
+    public AddSurveyRequest getById(int id){
+        return null;
+    }
+
 }

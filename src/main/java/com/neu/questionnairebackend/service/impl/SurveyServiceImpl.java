@@ -1,11 +1,13 @@
 package com.neu.questionnairebackend.service.impl;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.neu.questionnairebackend.mapper.OptionMapper;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
+import com.neu.questionnairebackend.model.domain.Choices;
+import com.neu.questionnairebackend.model.domain.Question;
 import com.neu.questionnairebackend.model.domain.Survey;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
@@ -30,8 +32,6 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     private SurveyMapper surveyMapper;
     @Resource
     private QuestionMapper questionMapper;
-    @Resource
-    private OptionMapper optionMapper;
     @Resource
     private QuestionService questionService;
     @Override
@@ -79,6 +79,53 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             questionService.addQuestions(questionList, survey.getId());
         }
         return false;
+    }
+
+//    @Override
+//    public AddSurveyRequest getSurveyById(int id, HttpServletRequest request) {
+//        AddSurveyRequest addSurveyRequest = new AddSurveyRequest();
+//        Survey survey = surveyMapper.selectById(id);
+//        addSurveyRequest.setSurveyDescription(survey.getDescription());
+//        //todo:好像不行,缺一个relate
+//        addSurveyRequest.setSurveyType(survey.getSurveyType().toString());
+//        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("surveyId", id);
+//        List<Question> questions = questionMapper.selectList(queryWrapper);
+//
+//
+//        return null;
+//    }
+
+    @Override
+    public AddSurveyRequest getSurveyById(int id) {
+        AddSurveyRequest addSurveyRequest = new AddSurveyRequest();
+        Survey survey = surveyMapper.selectById(id);
+        addSurveyRequest.setSurveyName(survey.getSurveyName());
+        addSurveyRequest.setSurveyDescription(survey.getDescription());
+        addSurveyRequest.setSurveyType(survey.getSurveyType().toString());
+        addSurveyRequest.setRelate(survey.getCanFinishTime()); // 假设`relate`对应的字段是`canFinishTime`
+        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("surveyId", id);
+        List<Question> questions = questionMapper.selectList(queryWrapper);
+        List<AddSurveyRequest.QuestionRequest> questionRequests = new ArrayList<>();
+        for (Question question : questions) {
+            AddSurveyRequest.QuestionRequest questionRequest = new AddSurveyRequest.QuestionRequest();
+            questionRequest.setQuestionDescription(question.getQuestionDescription());
+            List<AddSurveyRequest.QuestionRequest.OptionRequest> choicesRequests = new ArrayList<>();
+            for (Choices choices : questionService.getChoices(question.getId())) {
+                AddSurveyRequest.QuestionRequest.OptionRequest choicesRequest = new AddSurveyRequest.QuestionRequest.OptionRequest();
+                choicesRequest.setOption(choices.getDescription());
+                choicesRequest.setDestination(choices.getDestination().toString());
+                choicesRequests.add(choicesRequest);
+            }
+
+            questionRequest.setOptions(choicesRequests);
+            questionRequests.add(questionRequest);
+        }
+
+        addSurveyRequest.setAddQuestion(questionRequests);
+
+        return addSurveyRequest;
     }
 }
 

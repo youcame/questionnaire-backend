@@ -6,7 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neu.questionnairebackend.mapper.ChoicesMapper;
 import lombok.Data;
+
+import javax.annotation.Resource;
 
 /**
  * 
@@ -48,4 +54,7 @@ public class Question implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+
+
 }

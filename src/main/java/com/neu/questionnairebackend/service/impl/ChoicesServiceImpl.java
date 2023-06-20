@@ -1,9 +1,7 @@
 package com.neu.questionnairebackend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.neu.questionnairebackend.mapper.OptionMapper;
 import com.neu.questionnairebackend.model.domain.Choices;
-import com.neu.questionnairebackend.model.domain.Option;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.service.ChoicesService;
 import com.neu.questionnairebackend.mapper.ChoicesMapper;

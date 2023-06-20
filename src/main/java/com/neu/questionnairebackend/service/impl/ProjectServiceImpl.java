@@ -3,7 +3,9 @@ package com.neu.questionnairebackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.Authority.UserAuthority;
+import com.neu.questionnairebackend.mapper.ChoicesMapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
+import com.neu.questionnairebackend.model.domain.Choices;
 import com.neu.questionnairebackend.model.domain.Project;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.service.ProjectService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author HUANG
@@ -27,6 +30,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
     private UserMapper userMapper;
     @Resource
     private ProjectMapper projectMapper;
+    @Resource
+    private ChoicesMapper choicesMapper;
+
     @Override
     public boolean updateById(Project project, HttpServletRequest request) {
         project.setUpdateTime(new Date());
@@ -54,6 +60,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
         project.setUpdateBy(creator);
         projectMapper.insert(project);
         return 1;
+    }
+
+    @Override
+    public List<Choices> getChoices(int id) {
+        QueryWrapper<Choices> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("questionId", id);
+        List<Choices> choicesList = choicesMapper.selectList(queryWrapper);
+        return choicesList;
     }
 
 

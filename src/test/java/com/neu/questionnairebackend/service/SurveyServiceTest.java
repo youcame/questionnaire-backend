@@ -3,6 +3,7 @@ import java.util.Date;
 
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.ModifySurveyRequest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -53,6 +54,13 @@ class SurveyServiceTest {
         survey.setTotalTimes(1);
         boolean b = surveyService.updateFrontSurvey(survey);
         log.info("更新问卷的结果为:{}", b);
+    }
+
+    @Test
+    void getSurveyById(){
+        int id = 3;
+        AddSurveyRequest survey = surveyService.getSurveyById(id);
+        System.out.println(survey);
     }
 
 }

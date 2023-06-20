@@ -1,11 +1,12 @@
 package com.neu.questionnairebackend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.mapper.ChoicesMapper;
+import com.neu.questionnairebackend.model.domain.Choices;
 import com.neu.questionnairebackend.model.domain.Question;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.service.ChoicesService;
-import com.neu.questionnairebackend.service.OptionService;
 import com.neu.questionnairebackend.service.QuestionService;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     @Resource
     private ChoicesService choicesService;
 
+    @Resource
+    private ChoicesMapper choicesMapper;
+
     @Override
     public boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId) {
         for(AddSurveyRequest.QuestionRequest questionRequest: questions){
@@ -39,6 +43,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             choicesService.createChoices(questionRequest.getOptions(), id);
         }
         return true;
+    }
+
+    @Override
+    public List<Choices> getChoices(int id) {
+        QueryWrapper<Choices> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("questionId", id);
+        List<Choices> choicesList = choicesMapper.selectList(queryWrapper);
+        return choicesList;
     }
 }
 

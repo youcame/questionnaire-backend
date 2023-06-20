@@ -1,6 +1,8 @@
 package com.neu.questionnairebackend.service;
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
 import com.neu.questionnairebackend.model.domain.Question;
 import org.junit.jupiter.api.Assertions;
@@ -26,5 +28,13 @@ class QuestionServiceTest {
         question.setTotalTimes(1);
         question.setAns("");
         System.out.println(questionMapper.insert(question));
+    }
+
+    @Test
+    void SearchQuestions(){
+        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("surveyId", 3);
+        List<Question> questions = questionMapper.selectList(queryWrapper);
+        System.out.println(questions);
     }
 }

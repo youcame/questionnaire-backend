@@ -21,6 +21,7 @@ public class AddSurveyRequest implements Serializable {
         @Data
         public static class OptionRequest implements Serializable {
             private static final long serialVersionUID = 1L;
+            //选项描述
             private String option;
             private String destination;
         }

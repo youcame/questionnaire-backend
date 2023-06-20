@@ -1,5 +1,6 @@
 package com.neu.questionnairebackend.service;
 
+import com.neu.questionnairebackend.model.domain.Choices;
 import com.neu.questionnairebackend.model.domain.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
@@ -13,4 +14,5 @@ import java.util.List;
 */
 public interface QuestionService extends IService<Question> {
     boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId);
+    public List<Choices> getChoices(int id);
 }
