@@ -1,8 +1,10 @@
 package com.neu.questionnairebackend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.neu.questionnairebackend.mapper.ChoicesMapper;
 import com.neu.questionnairebackend.model.domain.Question;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
+import com.neu.questionnairebackend.service.ChoicesService;
 import com.neu.questionnairebackend.service.OptionService;
 import com.neu.questionnairebackend.service.QuestionService;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
@@ -20,9 +22,10 @@ import java.util.List;
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     implements QuestionService{
     @Resource
-    private OptionService optionService;
-    @Resource
     private QuestionMapper questionMapper;
+
+    @Resource
+    private ChoicesService choicesService;
 
     @Override
     public boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId) {
@@ -33,7 +36,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
                     .getQuestionDescription());
             questionMapper.insert(question);
             Integer id = question.getId();
-            optionService.createOptions(questionRequest.getOptions(), id);
+            choicesService.createChoices(questionRequest.getOptions(), id);
         }
         return true;
     }
