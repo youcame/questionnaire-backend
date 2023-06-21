@@ -38,12 +38,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             question.setSurveyId(surveyId);
             question.setQuestionDescription(questionRequest
                     .getQuestionDescription());
+            question.setQuestionType(questionRequest.getQuestionType());
             questionMapper.insert(question);
             Integer id = question.getId();
-            choicesService.createChoices(questionRequest.getOptions(), id);
+            List<AddSurveyRequest.QuestionRequest.OptionRequest> options = questionRequest.getOptions();
+            choicesService.createChoices(options, id);
         }
         return true;
     }
+
 
     @Override
     public List<Choices> getChoices(int id) {

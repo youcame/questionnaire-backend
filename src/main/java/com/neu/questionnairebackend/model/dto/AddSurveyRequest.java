@@ -18,6 +18,7 @@ public class AddSurveyRequest implements Serializable {
         private static final long serialVersionUID = 1L;
         private String questionDescription;
         private List<OptionRequest> options;
+        private Integer questionType;
         @Data
         public static class OptionRequest implements Serializable {
             private static final long serialVersionUID = 1L;

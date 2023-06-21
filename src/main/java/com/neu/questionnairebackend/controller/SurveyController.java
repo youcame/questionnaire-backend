@@ -92,9 +92,10 @@ public class SurveyController {
         return true;
     }
 
-    @GetMapping("/getById")
-    public AddSurveyRequest getById(int id){
-        return null;
+    @GetMapping("/getSurveyById")
+    public AddSurveyRequest getSurveyById( Integer id){
+        if(id<=0)return null;
+        else return surveyService.getSurveyById(id);
     }
 
 }

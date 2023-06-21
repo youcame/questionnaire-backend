@@ -43,7 +43,7 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             frontSurvey.setSurveyType(survey.getSurveyType());
             frontSurvey.setSurveyName(survey.getSurveyName());
             frontSurvey.setDescription(survey.getDescription());
-            frontSurvey.setSurveyStatus(0);
+            frontSurvey.setSurveyStatus(survey.getSurveyStatus());
             frontSurvey.setTotalTimes(survey.getTotalTimes());
             frontSurvey.setUpdateTime(new Date());
             return this.updateById(frontSurvey);
@@ -51,51 +51,45 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         return false;
     }
 
+    /**
+     *
+     * @param addSurveyRequest
+     * @param httpServletRequest
+     * @return 添加一个问卷的请求
+     */
     @Override
     public boolean addSurvey(AddSurveyRequest addSurveyRequest, HttpServletRequest httpServletRequest) {
         List<AddSurveyRequest.QuestionRequest> questionList = addSurveyRequest.getAddQuestion();
         Survey survey = new Survey();
-        for(AddSurveyRequest.QuestionRequest question: questionList){
-            if("timeLimit".equals(addSurveyRequest.getSurveyType())){
-                survey.setSurveyType(1);
-                survey.setCanFinishTime(addSurveyRequest.getRelate());
-            }
-            if("timesCanWrite".equals(addSurveyRequest.getSurveyType())){
-                survey.setSurveyType(2);
-                survey.setTotalTimes(Integer.parseInt(addSurveyRequest.getRelate()));
-            }
-            if("public".equals(addSurveyRequest.getSurveyType())){
-                survey.setSurveyType(2);
-            }
-            survey.setSurveyStatus(0);
-            survey.setSurveyName(addSurveyRequest.getSurveyName());
-            survey.setDescription(addSurveyRequest.getSurveyDescription());
-            survey.setUpdateTime(new Date());
-            survey.setCreateTime(new Date());
-            QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
-            Long aLong = surveyMapper.selectCount(queryWrapper);
-            survey.setId(aLong.intValue()+1);
-            surveyMapper.insert(survey);
-            questionService.addQuestions(questionList, survey.getId());
+        if("1".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(1);
+            survey.setCanFinishTime(addSurveyRequest.getRelate());
         }
+        if("2".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(2);
+            survey.setTotalTimes(Integer.parseInt(addSurveyRequest.getRelate()));
+        }
+        if("4".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(4);
+        }
+        survey.setSurveyStatus(0);
+        survey.setSurveyName(addSurveyRequest.getSurveyName());
+        survey.setDescription(addSurveyRequest.getSurveyDescription());
+        survey.setUpdateTime(new Date());
+        survey.setCreateTime(new Date());
+        QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
+        Long aLong = surveyMapper.selectCount(queryWrapper);
+        survey.setId(aLong.intValue()+1);
+        surveyMapper.insert(survey);
+        questionService.addQuestions(questionList, survey.getId());
         return false;
     }
 
-//    @Override
-//    public AddSurveyRequest getSurveyById(int id, HttpServletRequest request) {
-//        AddSurveyRequest addSurveyRequest = new AddSurveyRequest();
-//        Survey survey = surveyMapper.selectById(id);
-//        addSurveyRequest.setSurveyDescription(survey.getDescription());
-//        //todo:好像不行,缺一个relate
-//        addSurveyRequest.setSurveyType(survey.getSurveyType().toString());
-//        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("surveyId", id);
-//        List<Question> questions = questionMapper.selectList(queryWrapper);
-//
-//
-//        return null;
-//    }
-
+    /**
+     *
+     * @param id
+     * @return  返回给前端一个"更改问卷"的参数请求
+     */
     @Override
     public AddSurveyRequest getSurveyById(int id) {
         AddSurveyRequest addSurveyRequest = new AddSurveyRequest();
@@ -111,18 +105,17 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         for (Question question : questions) {
             AddSurveyRequest.QuestionRequest questionRequest = new AddSurveyRequest.QuestionRequest();
             questionRequest.setQuestionDescription(question.getQuestionDescription());
+            questionRequest.setQuestionType(question.getQuestionType());
             List<AddSurveyRequest.QuestionRequest.OptionRequest> choicesRequests = new ArrayList<>();
             for (Choices choices : questionService.getChoices(question.getId())) {
                 AddSurveyRequest.QuestionRequest.OptionRequest choicesRequest = new AddSurveyRequest.QuestionRequest.OptionRequest();
                 choicesRequest.setOption(choices.getDescription());
-                choicesRequest.setDestination(choices.getDestination().toString());
+                choicesRequest.setDestination(String.valueOf(choices.getDestination()));
                 choicesRequests.add(choicesRequest);
             }
-
             questionRequest.setOptions(choicesRequests);
             questionRequests.add(questionRequest);
         }
-
         addSurveyRequest.setAddQuestion(questionRequests);
 
         return addSurveyRequest;

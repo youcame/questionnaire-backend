@@ -21,15 +21,23 @@ public class ChoicesServiceImpl extends ServiceImpl<ChoicesMapper, Choices>
     @Resource
     private ChoicesMapper choicesMapper;
 
+
+    /**
+     *
+     * @param optionRequests 选项的dto类
+     * @param id 问题的id
+     * @return  创建问题对应的选项
+     */
     @Override
     public boolean createChoices(List<AddSurveyRequest.QuestionRequest.OptionRequest> optionRequests, int id) {
         for(AddSurveyRequest.QuestionRequest.OptionRequest optionRequest: optionRequests){
             Choices choices = new Choices();
             choices.setQuestionId(id);
-            choices.setDescription(optionRequest.getDestination());
-            if(optionRequest.getDestination()!=null) {
+            choices.setDescription(optionRequest.getOption());
+            if(optionRequest.getDestination()!=null && !optionRequest.getDestination().isEmpty()) {
                 choices.setDestination(Integer.parseInt(optionRequest.getDestination()));
             }
+            else choices.setDestination(0);
             choicesMapper.insert(choices);
         }
         return true;
