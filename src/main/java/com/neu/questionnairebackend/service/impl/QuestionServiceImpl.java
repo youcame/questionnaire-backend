@@ -34,11 +34,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     @Override
     public boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId) {
         for(AddSurveyRequest.QuestionRequest questionRequest: questions){
-            Question question = new Question();
-            question.setSurveyId(surveyId);
-            question.setQuestionDescription(questionRequest
-                    .getQuestionDescription());
-            question.setQuestionType(questionRequest.getQuestionType());
+            Question question = this.getQuestionFromRequest(questionRequest, surveyId);
             questionMapper.insert(question);
             Integer id = question.getId();
             List<AddSurveyRequest.QuestionRequest.OptionRequest> options = questionRequest.getOptions();
@@ -55,6 +51,18 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         List<Choices> choicesList = choicesMapper.selectList(queryWrapper);
         return choicesList;
     }
+
+    @Override
+    public Question getQuestionFromRequest(AddSurveyRequest.QuestionRequest questionRequest, int surveyId) {
+        Question question = new Question();
+        question.setSurveyId(surveyId);
+        question.setQuestionDescription(questionRequest
+                .getQuestionDescription());
+        question.setQuestionType(questionRequest.getQuestionType());
+        return question;
+    }
+
+
 }
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.neu.questionnairebackend.mapper.ChoicesMapper;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
 import com.neu.questionnairebackend.model.domain.Choices;
 import com.neu.questionnairebackend.model.domain.Question;
@@ -34,6 +35,8 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     private QuestionMapper questionMapper;
     @Resource
     private QuestionService questionService;
+    @Resource
+    private ChoicesMapper choicesMapper;
     @Override
     public boolean updateFrontSurvey(ModifySurveyRequest survey) {
         if(survey.getTotalTimes()<=0)return false;
@@ -60,26 +63,9 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     @Override
     public boolean addSurvey(AddSurveyRequest addSurveyRequest, HttpServletRequest httpServletRequest) {
         List<AddSurveyRequest.QuestionRequest> questionList = addSurveyRequest.getAddQuestion();
-        Survey survey = new Survey();
-        if("1".equals(addSurveyRequest.getSurveyType())){
-            survey.setSurveyType(1);
-            survey.setCanFinishTime(addSurveyRequest.getRelate());
-        }
-        if("2".equals(addSurveyRequest.getSurveyType())){
-            survey.setSurveyType(2);
-            survey.setTotalTimes(Integer.parseInt(addSurveyRequest.getRelate()));
-        }
-        if("4".equals(addSurveyRequest.getSurveyType())){
-            survey.setSurveyType(4);
-        }
-        survey.setSurveyStatus(0);
-        survey.setSurveyName(addSurveyRequest.getSurveyName());
-        survey.setDescription(addSurveyRequest.getSurveyDescription());
-        survey.setUpdateTime(new Date());
+        Survey survey = this.getSurveyFromRequest(addSurveyRequest);
         survey.setCreateTime(new Date());
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
-        Long aLong = surveyMapper.selectCount(queryWrapper);
-        survey.setId(aLong.intValue()+1);
         surveyMapper.insert(survey);
         questionService.addQuestions(questionList, survey.getId());
         return false;
@@ -97,10 +83,13 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         addSurveyRequest.setSurveyName(survey.getSurveyName());
         addSurveyRequest.setSurveyDescription(survey.getDescription());
         addSurveyRequest.setSurveyType(survey.getSurveyType().toString());
-        addSurveyRequest.setRelate(survey.getCanFinishTime()); // 假设`relate`对应的字段是`canFinishTime`
-        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("surveyId", id);
-        List<Question> questions = questionMapper.selectList(queryWrapper);
+        if(survey.getSurveyType() == 1) {
+            addSurveyRequest.setRelate(survey.getCanFinishTime());
+        }
+        if(survey.getSurveyType() == 2) {
+            addSurveyRequest.setRelate(survey.getTotalTimes().toString());
+        }
+        List<Question> questions = this.getQuestions(id);
         List<AddSurveyRequest.QuestionRequest> questionRequests = new ArrayList<>();
         for (Question question : questions) {
             AddSurveyRequest.QuestionRequest questionRequest = new AddSurveyRequest.QuestionRequest();
@@ -119,6 +108,63 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         addSurveyRequest.setAddQuestion(questionRequests);
 
         return addSurveyRequest;
+    }
+
+    /**
+     *
+     * @param id
+     * @return 这个方法通过问卷id，彻底删除相关的问卷内容
+     */
+    @Override
+    public boolean deleteById(int id) {
+        List<Question> questions = this.getQuestions(id);
+        for(Question question : questions){
+            List<Choices> choices = questionService.getChoices(question.getId());
+            for(Choices choices1 : choices){
+                int i = choicesMapper.deleteById(choices1);
+                System.out.println(i);
+            }
+            questionMapper.deleteById(question);
+        }
+        surveyMapper.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public boolean updateSurvey(AddSurveyRequest addSurveyRequest, int id, HttpServletRequest request) {
+        Survey survey = this.getSurveyFromRequest(addSurveyRequest);
+        survey.setId(id);
+        this.deleteById(id);
+        return this.addSurvey(addSurveyRequest, request);
+    }
+
+    @Override
+    public Survey getSurveyFromRequest(AddSurveyRequest addSurveyRequest) {
+        Survey survey = new Survey();
+        if("1".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(1);
+            survey.setCanFinishTime(addSurveyRequest.getRelate());
+        }
+        if("2".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(2);
+            survey.setTotalTimes(Integer.parseInt(addSurveyRequest.getRelate()));
+        }
+        if("4".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(4);
+        }
+        survey.setSurveyStatus(0);
+        survey.setSurveyName(addSurveyRequest.getSurveyName());
+        survey.setDescription(addSurveyRequest.getSurveyDescription());
+        survey.setUpdateTime(new Date());
+        return survey;
+    }
+
+    @Override
+    public List<Question> getQuestions(int surveyId) {
+        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("surveyId", surveyId);
+        List<Question> questions = questionMapper.selectList(queryWrapper);
+        return questions;
     }
 }
 

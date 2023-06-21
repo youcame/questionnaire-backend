@@ -15,4 +15,5 @@ import java.util.List;
 public interface QuestionService extends IService<Question> {
     boolean addQuestions(List<AddSurveyRequest.QuestionRequest> questions, int surveyId);
     public List<Choices> getChoices(int id);
+    public Question getQuestionFromRequest(AddSurveyRequest.QuestionRequest questionRequest, int surveyId);
 }

@@ -53,7 +53,7 @@ public class SurveyController {
      *
      * @param id
      * @param request
-     * @return 删除的结果
+     * @return 删除的结果,不注释的内容为删除所有结果；注释的内容为逻辑删除，保留问卷结果
      */
     @PostMapping("/delete")
     public boolean deleteSurvey(@RequestBody Integer id, HttpServletRequest request) {
@@ -62,7 +62,8 @@ public class SurveyController {
         }
         if (id < 0) {
             return false;
-        } else return surveyService.removeById(id);
+        } else return surveyService.deleteById(id);
+//        else return surveyService.removeById(id);
     }
 
     /**
@@ -82,12 +83,15 @@ public class SurveyController {
     }
 
     @PostMapping("/create")
-    public boolean addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, HttpServletRequest request){
+    public boolean addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, Integer id, HttpServletRequest request){
         if(!UserAuthority.isAdmin(request)){
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
-        if(addSurveyRequest!=null){
+        if(addSurveyRequest!=null && id==null){
             surveyService.addSurvey(addSurveyRequest, request);
+        }
+        if(addSurveyRequest!=null && id!=null){
+            surveyService.updateSurvey(addSurveyRequest, id, request);
         }
         return true;
     }
