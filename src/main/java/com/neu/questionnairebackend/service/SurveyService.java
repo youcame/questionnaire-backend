@@ -19,13 +19,13 @@ public interface SurveyService extends IService<Survey> {
 
     boolean updateFrontSurvey(ModifySurveyRequest survey);
 
-    boolean addSurvey(AddSurveyRequest addSurveyRequest, HttpServletRequest request);
+    boolean addSurvey(AddSurveyRequest addSurveyRequest);
 
     AddSurveyRequest getSurveyById(int id);
 
     boolean deleteById(int id);
 
-    boolean updateSurvey(AddSurveyRequest addSurveyRequest, int id, HttpServletRequest request);
+    boolean updateSurvey(AddSurveyRequest addSurveyRequest, int id);
 
     Survey getSurveyFromRequest(AddSurveyRequest addSurveyRequest);
     List<Question> getQuestions(int surveyId);

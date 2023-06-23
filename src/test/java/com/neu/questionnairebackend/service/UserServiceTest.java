@@ -1,81 +1,177 @@
 package com.neu.questionnairebackend.service;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
-import org.junit.jupiter.api.Test;;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.neu.questionnairebackend.service.UserService;
+import com.neu.questionnairebackend.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class UserServiceTest {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceTest.class);
-    @Resource
-    private UserService userService;
-    @Resource
+
+    @Mock
     private UserMapper userMapper;
 
-    Logger log = LoggerFactory.getLogger(UserServiceTest.class);
-    /**
-     * 添加用户
-     */
-    @Test
-    void testAddUser(){
-        User user = new User();
-        user.setUsername("");
-        user.setPassword("");
-        user.setUserAccount("");
-        user.setAvatarUrl("");
-        user.setPhone("");
-        user.setEmail("");
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
-        boolean result = userService.save(user);
-        log.info("搜索的结果为: {}", result);
-    }
-    /**
-     * 用户注册
-     */
-    @Test
-    void userRegister() {
-        String userAccount = "commonUsers";
-        String password = "12345678";
-        String checkPassword = "12345678";
-        long l = userService.userRegister(userAccount, password, checkPassword);
-        log.info("注册得到的用户id为: {}", l);
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    /**
-     * 用户更新
-     */
     @Test
-    void userUpdate(){
-        ModifyUserRequest user = new ModifyUserRequest();
-        user.setUsername("冰雪灬独舞");
-        user.setAvatarUrl("123");
-        user.setGender(0);
-        user.setPhone("123");
-        user.setEmail("123");
-        user.setUserStatus(0);
-        user.setId(4L);
+    void testUserRegister_Success() {
+        // Arrange
+        String userAccount = "testUser";
+        String password = "password";
+        String checkPassword = "password";
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",4L);
-        User user1 =  userMapper.selectOne(queryWrapper);
-        boolean b = userService.updateFrontUser(user);
-        log.info("更新的结果为: {}", b);
+        queryWrapper.eq("userAccount", userAccount);
+        when(userMapper.selectCount(queryWrapper)).thenReturn(0L);
+        when(userMapper.selectCount(any(QueryWrapper.class))).thenReturn(0L);
+
+        long userId = userService.userRegister(userAccount, password, checkPassword);
+        assertEquals(1L, userId);
+        verify(userMapper, times(1)).selectCount(queryWrapper);
+        verify(userMapper, times(1)).selectCount(any(QueryWrapper.class));
+        verify(userMapper, times(1)).insert(any(User.class));
     }
 
     @Test
-    void deleteUser(){
-        User user = new User();
-        user.setId(5L);
-        boolean b = userService.removeById(0L);
-        log.info("删除的结果为: {}", b);
+    void testUserRegister_UserAccountAlreadyExists() {
+        String userAccount = "testUser";
+        String password = "password";
+        String checkPassword = "password";
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        when(userMapper.selectCount(queryWrapper)).thenReturn(1L);
+
+        long userId = userService.userRegister(userAccount, password, checkPassword);
+        assertEquals(-3L, userId);
+        verify(userMapper, times(1)).selectCount(queryWrapper);
+        verify(userMapper, never()).selectCount(any(QueryWrapper.class));
+        verify(userMapper, never()).insert(any(User.class));
     }
+
+    @Test
+    void testUserRegister_PasswordMismatch() {
+        // Arrange
+        String userAccount = "testUser";
+        String password = "password";
+        String checkPassword = "mismatch";
+
+        // Act
+        long userId = userService.userRegister(userAccount, password, checkPassword);
+
+        // Assert
+        assertEquals(-2L, userId);
+        verify(userMapper, never()).selectCount(any(QueryWrapper.class));
+        verify(userMapper, never()).insert(any(User.class));
+    }
+
+    @Test
+    void testUserLogin_Success() {
+        String userAccount = "testUser";
+        String password = "password";
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("password", "encryptedPassword");
+        User user = new User();
+        when(userMapper.selectOne(queryWrapper)).thenReturn(user);
+        User result = userService.userLogin(userAccount, password, request);
+        assertNotNull(result);
+        verify(request, times(1)).getSession();
+        verify(request.getSession(), times(1)).setAttribute(eq("USER_LOGIN_STATE"), any(User.class));
+    }
+
+    @Test
+    void testUserLogin_InvalidCredentials() {
+        String userAccount = "testUser";
+        String password = "password";
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("password", "encryptedPassword");
+        when(userMapper.selectOne(queryWrapper)).thenReturn(null);
+        User result = userService.userLogin(userAccount, password, request);
+        assertNull(result);
+        verify(request, never()).getSession();
+        verify(request.getSession(), never()).setAttribute(eq("USER_LOGIN_STATE"), any(User.class));
+    }
+
+    @Test
+    void testUpdateFrontUser_Success() {
+        ModifyUserRequest user = new ModifyUserRequest();
+        user.setId(1L);
+        user.setUserRole(1);
+        user.setAvatarUrl("avatar.jpg");
+        user.setUserStatus(1);
+        user.setEmail("test@test.com");
+        user.setPhone("123456789");
+        user.setUsername("testUser");
+        user.setGender(0);
+        User existingUser = new User();
+        when(userMapper.selectById(user.getId())).thenReturn(existingUser);
+        when(userMapper.updateById(existingUser)).thenReturn(1);
+        boolean result = userService.updateFrontUser(user);
+
+        assertTrue(result);
+        verify(userMapper, times(1)).selectById(user.getId());
+        verify(userMapper, times(1)).updateById(existingUser);
+        assertEquals(user.getUserRole(), existingUser.getUserRole());
+        assertEquals(user.getAvatarUrl(), existingUser.getAvatarUrl());
+        assertEquals(user.getUserStatus(), existingUser.getUserStatus());
+        assertEquals(user.getEmail(), existingUser.getEmail());
+        assertEquals(user.getPhone(), existingUser.getPhone());
+        assertEquals(user.getUsername(), existingUser.getUsername());
+        assertEquals(user.getGender(), existingUser.getGender());
+    }
+
+    @Test
+    void testUpdateFrontUser_UserNotFound() {
+        ModifyUserRequest user = new ModifyUserRequest();
+        user.setId(1L);
+        when(userMapper.selectById(user.getId())).thenReturn(null);
+        boolean result = userService.updateFrontUser(user);
+        assertFalse(result);
+        verify(userMapper, times(1)).selectById(user.getId());
+        verify(userMapper, never()).updateById(any(User.class));
+    }
+
+    @Test
+    void testUpdateFrontUser_UserUpdateFailed() {
+        ModifyUserRequest user = new ModifyUserRequest();
+        user.setId(1L);
+        User existingUser = new User();
+        when(userMapper.selectById(user.getId())).thenReturn(existingUser);
+        when(userMapper.updateById(existingUser)).thenReturn(0);
+        boolean result = userService.updateFrontUser(user);
+        assertFalse(result);
+        verify(userMapper, times(1)).selectById(user.getId());
+        verify(userMapper, times(1)).updateById(existingUser);
+    }
+
+    @Test
+    void testUserLogout() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        int result = userService.userLogout(request);
+        assertEquals(1, result);
+        verify(request, times(1)).removeAttribute("USER_LOGIN_STATE");
+    }
+
+
 }

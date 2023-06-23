@@ -61,7 +61,7 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
      * @return 添加一个问卷的请求
      */
     @Override
-    public boolean addSurvey(AddSurveyRequest addSurveyRequest, HttpServletRequest httpServletRequest) {
+    public boolean addSurvey(AddSurveyRequest addSurveyRequest) {
         List<AddSurveyRequest.QuestionRequest> questionList = addSurveyRequest.getAddQuestion();
         Survey survey = this.getSurveyFromRequest(addSurveyRequest);
         survey.setCreateTime(new Date());
@@ -131,11 +131,11 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     }
 
     @Override
-    public boolean updateSurvey(AddSurveyRequest addSurveyRequest, int id, HttpServletRequest request) {
+    public boolean updateSurvey(AddSurveyRequest addSurveyRequest, int id) {
         Survey survey = this.getSurveyFromRequest(addSurveyRequest);
         survey.setId(id);
         this.deleteById(id);
-        return this.addSurvey(addSurveyRequest, request);
+        return this.addSurvey(addSurveyRequest);
     }
 
     @Override

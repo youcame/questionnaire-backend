@@ -63,7 +63,6 @@ public class SurveyController {
         if (id < 0) {
             return false;
         } else return surveyService.deleteById(id);
-//        else return surveyService.removeById(id);
     }
 
     /**
@@ -88,10 +87,10 @@ public class SurveyController {
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
         if(addSurveyRequest!=null && id==null){
-            surveyService.addSurvey(addSurveyRequest, request);
+            surveyService.addSurvey(addSurveyRequest);
         }
         if(addSurveyRequest!=null && id!=null){
-            surveyService.updateSurvey(addSurveyRequest, id, request);
+            surveyService.updateSurvey(addSurveyRequest, id);
         }
         return true;
     }

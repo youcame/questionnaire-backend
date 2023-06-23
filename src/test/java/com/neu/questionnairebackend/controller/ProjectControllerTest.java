@@ -43,15 +43,11 @@ public class ProjectControllerTest {
     public void testGetProjectList() {
         List<Project> projectList = new ArrayList<>();
         // 添加测试数据到projectList
-
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("projectName", "projectName");
         queryWrapper.like("projectDescription", "projectDescription");
-
         when(projectService.list(queryWrapper)).thenReturn(projectList);
-
         List<Project> result = projectController.getProjectList("projectName", "projectDescription", request);
-
         assertEquals(projectList, result);
     }
 
@@ -59,9 +55,7 @@ public class ProjectControllerTest {
     public void testDeleteProject() {
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(projectService.removeById(any())).thenReturn(true);
-
         boolean result = projectController.deleteProject(12345, request);
-
         assertTrue(result);
     }
 
@@ -69,12 +63,9 @@ public class ProjectControllerTest {
     public void testUpdateProject() {
         Project project = new Project();
         // 设置project的属性值
-
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(projectService.updateById(any())).thenReturn(true);
-
         boolean result = projectController.updateProject(project, request);
-
         assertTrue(result);
     }
 
@@ -82,12 +73,9 @@ public class ProjectControllerTest {
     public void testCreateProject() {
         Project project = new Project();
         // 设置project的属性值
-
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(projectService.createProject(any(), any(), any(), any())).thenReturn(12345);
-
         Integer result = projectController.createProject(project, request);
-
         assertEquals(Integer.valueOf(12345), result);
     }
 
@@ -95,11 +83,8 @@ public class ProjectControllerTest {
     public void testFindProjectById() {
         Project project = new Project();
         // 设置project的属性值
-
         when(projectService.getById(any())).thenReturn(project);
-
         Project result = projectController.findProjectById(12345);
-
         assertEquals(project, result);
     }
 }

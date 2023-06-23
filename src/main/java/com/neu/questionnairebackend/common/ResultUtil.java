@@ -9,7 +9,6 @@ public class ResultUtil {
         return new BaseResponse<>(errorCode);
     }
 
-    //todo:有点晕
     public static BaseResponse error(ErrorCode errorCode, String description){
         return new BaseResponse(errorCode.getCode(), "", errorCode.getMessage(),description);
     }

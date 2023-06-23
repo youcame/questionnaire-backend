@@ -43,15 +43,11 @@ public class SurveyControllerTest {
     public void testGetSurveyList() {
         List<Survey> surveyList = new ArrayList<>();
         // 添加测试数据到surveyList
-
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("surveyName", "surveyName");
         queryWrapper.like("surveyType", "surveyType");
-
         when(surveyService.list(queryWrapper)).thenReturn(surveyList);
-
         List<Survey> result = surveyController.getSurveyList("surveyName", "surveyType", request);
-
         assertEquals(surveyList, result);
     }
 
@@ -59,9 +55,7 @@ public class SurveyControllerTest {
     public void testDeleteSurvey() {
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(surveyService.removeById(any())).thenReturn(true);
-
         boolean result = surveyController.deleteSurvey(12345, request);
-
         assertTrue(result);
     }
 
@@ -69,15 +63,10 @@ public class SurveyControllerTest {
     public void testUpdateSurvey() {
         ModifySurveyRequest survey = new ModifySurveyRequest();
         // 设置survey的属性值
-
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(surveyService.updateFrontSurvey(any())).thenReturn(true);
-
         boolean result = surveyController.updateSurvey(survey, request);
-
         assertTrue(result);
     }
-
-    // 编写其他测试方法，类似上面的示例
 
 }

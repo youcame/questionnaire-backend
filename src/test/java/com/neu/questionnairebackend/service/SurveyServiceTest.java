@@ -40,6 +40,7 @@ class SurveyServiceTest {
         survey.setIsDelete(0);
         int insert = surveyMapper.insert(survey);
         log.info("插入问卷的id为:{}", insert);
+        log.info("创建问卷成功");
     }
 
     @Test
@@ -62,5 +63,4 @@ class SurveyServiceTest {
         AddSurveyRequest survey = surveyService.getSurveyById(id);
         System.out.println(survey);
     }
-
 }

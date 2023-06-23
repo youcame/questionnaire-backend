@@ -45,11 +45,8 @@ public class UserControllerTest {
     public void testUserRegister() {
         UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
         // 设置userRegisterRequest的属性值
-
         when(userService.userRegister(any(), any(), any())).thenReturn(12345L);
-
         Long result = userController.userRegister(userRegisterRequest);
-
         assertEquals(Long.valueOf(12345), result);
     }
 
@@ -57,22 +54,17 @@ public class UserControllerTest {
     public void testGetCurrentUser_withValidSession() {
         User user = new User();
         // 设置user的属性值
-
         when(request.getSession().getAttribute(any())).thenReturn(user);
         when(userService.getById(any())).thenReturn(user);
         when(userService.getSafeUser(any())).thenReturn(user);
-
         User result = userController.getCurrentUser(request);
-
         assertEquals(user, result);
     }
 
     @Test
     public void testGetCurrentUser_withInvalidSession() {
         when(request.getSession().getAttribute(any())).thenReturn(null);
-
         User result = userController.getCurrentUser(request);
-
         assertNull(result);
     }
 
@@ -80,23 +72,17 @@ public class UserControllerTest {
     public void testUserLogin() {
         UserLoginRequest userLoginRequest = new UserLoginRequest();
         // 设置userLoginRequest的属性值
-
         User user = new User();
         // 设置user的属性值
-
         when(userService.userLogin(any(), any(), any())).thenReturn(user);
-
         User result = userController.userRegister(userLoginRequest, request);
-
         assertEquals(user, result);
     }
 
     @Test
     public void testUserLogout() {
         when(userService.userLogout(any())).thenReturn(1);
-
         Integer result = userController.userLogout(request);
-
         assertEquals(Integer.valueOf(1), result);
     }
 
@@ -104,21 +90,16 @@ public class UserControllerTest {
     public void testSearchUsers_withAdminUser() {
         List<User> userList = new ArrayList<>();
         // 添加测试数据到userList
-
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(userService.list(any())).thenReturn(userList);
-
         List<User> result = userController.searchUsers("userAccount", "username", request);
-
         assertEquals(userList, result);
     }
 
     @Test
     public void testSearchUsers_withNonAdminUser() {
         when(UserAuthority.isAdmin(request)).thenReturn(false);
-
         List<User> result = userController.searchUsers("userAccount", "username", request);
-
         assertTrue(result.isEmpty());
     }
 
@@ -126,18 +107,14 @@ public class UserControllerTest {
     public void testDeleteUser_withAdminUser() {
         when(UserAuthority.isAdmin(request)).thenReturn(true);
         when(userService.removeById(any())).thenReturn(true);
-
         boolean result = userController.deleteUser(12345L, request);
-
         assertTrue(result);
     }
 
     @Test
     public void testDeleteUser_withNonAdminUser() {
         when(UserAuthority.isAdmin(request)).thenReturn(false);
-
         boolean result = userController.deleteUser(12345L, request);
-
         assertFalse(result);
     }
 
@@ -145,14 +122,10 @@ public class UserControllerTest {
     public void testUpdateUser() {
         ModifyUserRequest modifyUserRequest = new ModifyUserRequest();
         // 设置modifyUserRequest的属性值
-
         when(userService.updateFrontUser(any())).thenReturn(true);
-
         boolean result = userController.updateUser(modifyUserRequest, request);
-
         assertTrue(result);
     }
 
-    // 编写其他测试方法，类似上面的示例
 
 }
