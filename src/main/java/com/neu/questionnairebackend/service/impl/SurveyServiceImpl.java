@@ -57,7 +57,6 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
     /**
      *
      * @param addSurveyRequest
-     * @param httpServletRequest
      * @return 添加一个问卷的请求
      */
     @Override

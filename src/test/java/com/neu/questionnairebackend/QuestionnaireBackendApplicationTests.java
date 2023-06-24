@@ -7,6 +7,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -22,6 +25,11 @@ class QuestionnaireBackendApplicationTests {
 
     @Test
     void contextLoads() {
+    }
+    @Test
+    void testString(){
+        String a = "1,2";
+        List<String> b = new ArrayList<>();
     }
 
 }
