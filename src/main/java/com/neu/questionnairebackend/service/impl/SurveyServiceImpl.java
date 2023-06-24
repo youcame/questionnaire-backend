@@ -121,7 +121,6 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             List<Choices> choices = questionService.getChoices(question.getId());
             for(Choices choices1 : choices){
                 int i = choicesMapper.deleteById(choices1);
-                System.out.println(i);
             }
             questionMapper.deleteById(question);
         }

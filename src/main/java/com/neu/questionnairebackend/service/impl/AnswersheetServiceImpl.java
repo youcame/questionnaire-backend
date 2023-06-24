@@ -17,9 +17,7 @@ import com.neu.questionnairebackend.service.AnswersheetService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answersheet> implements AnswersheetService {
@@ -82,5 +80,20 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         answerRequest.setQuestions(questionDTOList);
         return answerRequest;
     }
+    @Override
+    public List<Answersheet> getAllAnswers() {
+        List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
+        Set<String> uniqueSurveyUserIds = new HashSet<>();
+        List<Answersheet> filteredAnswersheets = new ArrayList<>();
 
+        for (Answersheet answersheet : allAnswersheets) {
+            String surveyUserId = answersheet.getSurveyId() + "-" + answersheet.getUserId();
+            if (!uniqueSurveyUserIds.contains(surveyUserId)) {
+                uniqueSurveyUserIds.add(surveyUserId);
+                filteredAnswersheets.add(answersheet);
+            }
+        }
+
+        return filteredAnswersheets;
+    }
 }
