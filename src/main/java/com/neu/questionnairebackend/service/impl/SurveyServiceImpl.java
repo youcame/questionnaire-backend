@@ -147,6 +147,9 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             survey.setSurveyType(2);
             survey.setTotalTimes(Integer.parseInt(addSurveyRequest.getRelate()));
         }
+        if("3".equals(addSurveyRequest.getSurveyType())){
+            survey.setSurveyType(3);
+        }
         if("4".equals(addSurveyRequest.getSurveyType())){
             survey.setSurveyType(4);
         }

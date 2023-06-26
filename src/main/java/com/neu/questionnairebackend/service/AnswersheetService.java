@@ -15,5 +15,6 @@ import java.util.List;
 */
 public interface AnswersheetService extends IService<Answersheet> {
     AnswerRequest getAnswerById(int id);
-    List<Answersheet> getAllAnswers();
+    AnswerRequest getAnswerById(int id,Integer userId);
+    List<Answersheet> getAllAnswers(Integer surveyId);
 }

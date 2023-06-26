@@ -31,19 +31,25 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
     @Resource
     private ChoicesMapper choicesMapper;
 
+    /**
+     *
+     * @param answerId
+     * @return 通过Answer的Id得到一个问卷的答案信息
+     */
     @Override
-    public AnswerRequest getAnswerById(int id) {
-        Answersheet answersheet = answersheetMapper.selectById(id);
+    public AnswerRequest getAnswerById(int answerId) {
+        Answersheet answersheet = answersheetMapper.selectById(answerId);
         AnswerRequest answerRequest = new AnswerRequest();
         answerRequest.setId(answersheet.getId());
-
         // 获取问卷信息
         Survey survey = surveyMapper.selectById(answersheet.getSurveyId());
         answerRequest.setSurveyName(survey.getSurveyName());
         answerRequest.setSurveyDescription(survey.getDescription());
-
         // 获取问题列表
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+//        QueryWrapper<Question> queryWrapper1 = new QueryWrapper<>();
+//        queryWrapper1.eq("surveyId", answersheet.getSurveyId());
+//        queryWrapper1.eq("",answersheet.getUserId());
         List<Question> questionList = questionMapper.selectList(
                 new QueryWrapper<Question>().eq("surveyId", answersheet.getSurveyId()));
         for (int i = 0; i < questionList.size(); i++) {
@@ -54,9 +60,9 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("questionID",question.getId());
             queryWrapper.eq("surveyId", survey.getId());
+            queryWrapper.eq("userAccount", answersheet.getUserAccount());
             Answersheet answersheet1 = answersheetMapper.selectOne(queryWrapper);
             String userAnswers = answersheet1.getSelectChoices();
-
             // 获取选项列表
             List<OptionDTO> optionDTOList = new ArrayList<>();
             List<Choices> choicesList = choicesMapper.selectList(
@@ -74,14 +80,22 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             String[] userAnswerArray = userAnswers.split(",");
             userAnswerList.addAll(Arrays.asList(userAnswerArray));
             questionDTO.setUserAnswer(userAnswerList);
-
             questionDTOList.add(questionDTO);
         }
         answerRequest.setQuestions(questionDTOList);
         return answerRequest;
     }
+
     @Override
-    public List<Answersheet> getAllAnswers() {
+    public AnswerRequest getAnswerById(int id, Integer userId) {
+        AnswerRequest answerById = this.getAnswerById(id);
+        QueryWrapper<AnswerRequest> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId",userId);
+        return answerById;
+    }
+
+    @Override
+    public List<Answersheet> getAllAnswers(Integer surveyId) {
         List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
         Set<String> uniqueSurveyUserIds = new HashSet<>();
         List<Answersheet> filteredAnswersheets = new ArrayList<>();
@@ -90,10 +104,13 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             String surveyUserId = answersheet.getSurveyId() + "-" + answersheet.getUserId();
             if (!uniqueSurveyUserIds.contains(surveyUserId)) {
                 uniqueSurveyUserIds.add(surveyUserId);
-                filteredAnswersheets.add(answersheet);
+                if(surveyId!=null) {
+                    if(answersheet.getSurveyId()!=surveyId)continue;
+                    filteredAnswersheets.add(answersheet);
+                }
+                else filteredAnswersheets.add(answersheet);
             }
         }
-
         return filteredAnswersheets;
     }
 }

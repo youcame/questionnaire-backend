@@ -23,14 +23,27 @@ public class AnswerSheetController {
     @Resource
     AnswersheetMapper answersheetMapper;
 
+    /**
+     *
+     * @param id 为survey的Id
+     * @param userId
+     * @return  如果只有（answer）id，则只返回所有回答过的问卷列表信息；如果有（answer）Id与userId与
+     *
+     */
     @GetMapping("/getAnswerById")
-    public AnswerRequest getAnswerById(int id){
-        if(id<=0)return null;
-        return answersheetService.getAnswerById(id);
+    public AnswerRequest getAnswerById(int id,Integer userId) {
+        if (id <= 0) return null;
+        else if (userId == null || userId <= 0 ){
+            return answersheetService.getAnswerById(id);
+        }
+        else {
+            return answersheetService.getAnswerById(id);
+        }
     }
 
     @GetMapping("/getAnswers")
-    public List<Answersheet> getAnswers(){
-        return answersheetService.getAllAnswers();
+    public List<Answersheet> getAnswers(Integer surveyId){
+        return answersheetService.getAllAnswers(surveyId);
     }
+
 }
