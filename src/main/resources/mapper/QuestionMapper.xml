@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.questionnairebackend.mapper.QuestionMapper">
+
+    <resultMap id="BaseResultMap" type="com.neu.questionnairebackend.model.domain.Question">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="surveyId" column="surveyId" jdbcType="INTEGER"/>
+            <result property="questionDescription" column="questionDescription" jdbcType="VARCHAR"/>
+            <result property="questionType" column="questionType" jdbcType="INTEGER"/>
+            <result property="totalTimes" column="totalTimes" jdbcType="TIMESTAMP"/>
+            <result property="ans" column="ans" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,surveyId,questionDescription,
+        questionType,totalTimes,ans
+    </sql>
+</mapper>

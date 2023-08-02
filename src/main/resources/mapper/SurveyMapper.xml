@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.questionnairebackend.mapper.SurveyMapper">
+
+    <resultMap id="BaseResultMap" type="com.neu.questionnairebackend.model.domain.Survey">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="surveyType" column="surveyType" jdbcType="INTEGER"/>
+            <result property="surveyName" column="surveyName" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="finishUserId" column="finishUserId" jdbcType="BIGINT"/>
+            <result property="surveyStatus" column="surveyStatus" jdbcType="INTEGER"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="canFinishTime" column="canFinishTime" jdbcType="VARCHAR"/>
+            <result property="totalTimes" column="totalTimes" jdbcType="INTEGER"/>
+            <result property="nowTimes" column="nowTimes" jdbcType="INTEGER"/>
+            <result property="canFinishUserId" column="canFinishUserId" jdbcType="BIGINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="deleteTime" column="deleteTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,surveyType,surveyName,
+        description,finishUserId,surveyStatus,
+        url,canFinishTime,totalTimes,
+        nowTimes,canFinishUserId,createTime,
+        updateTime,deleteTime,isDelete
+    </sql>
+</mapper>
