@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @param <T>
  */
 @Data
-public class BaseResponse<T> implements Serializable{
+public class  BaseResponse<T> implements Serializable{
     private int code;
     private T data;
     private String message;

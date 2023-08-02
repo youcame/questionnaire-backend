@@ -47,9 +47,6 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         answerRequest.setSurveyDescription(survey.getDescription());
         // 获取问题列表
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-//        QueryWrapper<Question> queryWrapper1 = new QueryWrapper<>();
-//        queryWrapper1.eq("surveyId", answersheet.getSurveyId());
-//        queryWrapper1.eq("",answersheet.getUserId());
         List<Question> questionList = questionMapper.selectList(
                 new QueryWrapper<Question>().eq("surveyId", answersheet.getSurveyId()));
         for (int i = 0; i < questionList.size(); i++) {
@@ -74,7 +71,6 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
                 optionDTOList.add(optionDTO);
             }
             questionDTO.setOptions(optionDTOList);
-            System.out.println(userAnswers);
             // 设置用户答案
             List<String> userAnswerList = new ArrayList<>();
             String[] userAnswerArray = userAnswers.split(",");
@@ -99,7 +95,6 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
         Set<String> uniqueSurveyUserIds = new HashSet<>();
         List<Answersheet> filteredAnswersheets = new ArrayList<>();
-
         for (Answersheet answersheet : allAnswersheets) {
             String surveyUserId = answersheet.getSurveyId() + "-" + answersheet.getUserId();
             if (!uniqueSurveyUserIds.contains(surveyUserId)) {

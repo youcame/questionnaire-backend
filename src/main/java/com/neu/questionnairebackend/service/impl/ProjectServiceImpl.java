@@ -3,13 +3,15 @@ package com.neu.questionnairebackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.Authority.UserAuthority;
+import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.ChoicesMapper;
+import com.neu.questionnairebackend.mapper.ProjectMapper;
 import com.neu.questionnairebackend.mapper.UserMapper;
 import com.neu.questionnairebackend.model.domain.Choices;
 import com.neu.questionnairebackend.model.domain.Project;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.service.ProjectService;
-import com.neu.questionnairebackend.mapper.ProjectMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,8 +47,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project>
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", creator);
         Long result = userMapper.selectCount(queryWrapper);
-        System.out.println(result);
-        if(result<=0)return -1;
+        if(result<=0)throw new BusinessException(ErrorCode.PARAM_ERROR, "找不到项目");
         Project project = new Project();
         QueryWrapper<Project> queryWrapper1 = new QueryWrapper<>();
         Long result1 = projectMapper.selectCount(queryWrapper1);

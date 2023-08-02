@@ -2,6 +2,8 @@ package com.neu.questionnairebackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.dto.ModifyUserRequest;
 import com.neu.questionnairebackend.service.UserService;
@@ -50,30 +52,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 1.校验
         //校验输入是否合法
         if (StringUtils.isAnyBlank(userAccount, password, checkPassword)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"参数不能为空哦~");
         }
         if (userAccount.length() < 4) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "用户名至少需要四位哦~");
         }
         if (password.length() < 8 || checkPassword.length() < 8) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "用户密码至少有8位哦~");
         }
         //账户不能包含特殊字符
         String validPattern = "^[a-zA-Z0-9_\\u4e00-\\u9fa5]+$";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (!matcher.find()) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"账号不能包含特殊字符哦~");
         }
         //检验两次密码是否相同
         if (!password.equals(checkPassword)) {
-            return -2;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"两次密码不相同");
         }
         //检验是否有重复账户
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -3;
+            throw new BusinessException(ErrorCode.ACCOUNT_SAME, "账户已经被注册过了~");
         }
 
         //2.加密
@@ -91,7 +93,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setUpdateTime(new Date());
         boolean result = this.save(user);
         if (!result) {
-            return -4;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"");
         }
         //todo:这里注册得到的id存在问题
         return user.getId();
@@ -101,19 +103,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User userLogin(String userAccount, String password, HttpServletRequest request) {
         //1.校验
         if (StringUtils.isAnyBlank(userAccount, password)) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"参数为空");
         }
         if (userAccount.length() < 4) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"账号长度过短");
         }
         if (password.length() < 8) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"密码长度过短");
         }
         //账户不能包含特殊字符
         String validPattern = "^[a-zA-Z0-9_\\u4e00-\\u9fa5]+$";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (!matcher.find()) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"账户包含特殊字符");
         }
         //加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
@@ -122,8 +124,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("password", encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
-            log.info("login failed,userAccount cant match password");
-            return null;
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"用户为空");
         }
         User safeUser = this.getSafeUser(user);
         //记录登录态,传入的是一个user数据！！！

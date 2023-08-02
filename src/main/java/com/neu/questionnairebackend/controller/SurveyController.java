@@ -2,7 +2,9 @@ package com.neu.questionnairebackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.Authority.UserAuthority;
+import com.neu.questionnairebackend.common.BaseResponse;
 import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.common.ResultUtil;
 import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.SurveyMapper;
 import com.neu.questionnairebackend.model.domain.Survey;
@@ -38,7 +40,7 @@ public class SurveyController {
      * @return  筛选之后的用户列表
      */
     @GetMapping("/search")
-    public List<Survey> getSurveyList(String surveyName, String surveyType, HttpServletRequest request){
+    public BaseResponse<List<Survey>> getSurveyList(String surveyName, String surveyType, HttpServletRequest request){
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(surveyName)){
             queryWrapper.like("surveyName", surveyName);
@@ -46,7 +48,8 @@ public class SurveyController {
         if(StringUtils.isNotBlank(surveyType)){
             queryWrapper.like("surveyType", surveyType);
         }
-        return surveyService.list(queryWrapper);
+        List<Survey> list = surveyService.list(queryWrapper);
+        return ResultUtil.success(list);
     }
 
     /**
@@ -56,13 +59,16 @@ public class SurveyController {
      * @return 删除的结果,不注释的内容为删除所有结果；注释的内容为逻辑删除，保留问卷结果
      */
     @PostMapping("/delete")
-    public boolean deleteSurvey(@RequestBody Integer id, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteSurvey(@RequestBody Integer id, HttpServletRequest request) {
         if(!UserAuthority.isAdmin(request)){
-            return false;
+            throw new BusinessException(ErrorCode.NO_AUTH);
         }
         if (id < 0) {
-            return false;
-        } else return surveyService.deleteById(id);
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "id为空");
+        } else {
+            boolean b = surveyService.deleteById(id);
+            return ResultUtil.success(b);
+        }
     }
 
     /**
@@ -72,17 +78,18 @@ public class SurveyController {
      * @return 更新的结果
      */
     @PostMapping("/update")
-    public boolean updateSurvey(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
+    public BaseResponse<Boolean> updateSurvey(@RequestBody ModifySurveyRequest survey, HttpServletRequest request){
         if(survey == null || !UserAuthority.isAdmin(request)){
-            return false;
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"找不到问卷或者没权限");
         }
         else{
-            return surveyService.updateFrontSurvey(survey);
+            boolean b = surveyService.updateFrontSurvey(survey);
+            return ResultUtil.success(b);
         }
     }
 
     @PostMapping("/create")
-    public boolean addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, Integer id, HttpServletRequest request){
+    public BaseResponse<Boolean> addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, Integer id, HttpServletRequest request){
         if(!UserAuthority.isAdmin(request)){
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
@@ -92,13 +99,16 @@ public class SurveyController {
         if(addSurveyRequest!=null && id!=null){
             surveyService.updateSurvey(addSurveyRequest, id);
         }
-        return true;
+        return ResultUtil.success(true);
     }
 
     @GetMapping("/getSurveyById")
-    public AddSurveyRequest getSurveyById( Integer id){
-        if(id<=0)return null;
-        else return surveyService.getSurveyById(id);
+    public BaseResponse<AddSurveyRequest> getSurveyById( Integer id){
+        if(id<=0)throw new BusinessException(ErrorCode.NO_AUTH);
+        else {
+            AddSurveyRequest surveyById = surveyService.getSurveyById(id);
+            return ResultUtil.success(surveyById);
+        }
     }
 
 }

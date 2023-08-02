@@ -1,6 +1,6 @@
 spring:
   application:
-    name:questionnaire-backend
+    name: questionnaire-backend
   datasource:
     url: jdbc:mysql://localhost:3306/questionnaire?characterEncoding=utf-8&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,7 +11,6 @@ spring:
 
 server:
   port: 8080
-#  在使用前后端分离的前端页面时需要取消下面的注释！
   servlet:
     context-path: /api
 

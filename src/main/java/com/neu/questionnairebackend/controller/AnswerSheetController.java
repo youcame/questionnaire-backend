@@ -1,6 +1,9 @@
 package com.neu.questionnairebackend.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neu.questionnairebackend.common.BaseResponse;
+import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.common.ResultUtil;
+import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.AnswersheetMapper;
 import com.neu.questionnairebackend.model.domain.Answersheet;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
@@ -31,19 +34,21 @@ public class AnswerSheetController {
      *
      */
     @GetMapping("/getAnswerById")
-    public AnswerRequest getAnswerById(int id,Integer userId) {
-        if (id <= 0) return null;
+    public BaseResponse<AnswerRequest> getAnswerById(int id, Integer userId) {
+        if (id <= 0) throw new BusinessException(ErrorCode.PARAM_ERROR);
         else if (userId == null || userId <= 0 ){
-            return answersheetService.getAnswerById(id);
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "传入的userId为空或者小于等于0");
         }
         else {
-            return answersheetService.getAnswerById(id);
+            AnswerRequest answerById = answersheetService.getAnswerById(id);
+            return ResultUtil.success(answerById);
         }
     }
 
     @GetMapping("/getAnswers")
-    public List<Answersheet> getAnswers(Integer surveyId){
-        return answersheetService.getAllAnswers(surveyId);
+    public BaseResponse<List<Answersheet>> getAnswers(Integer surveyId){
+        List<Answersheet> allAnswers = answersheetService.getAllAnswers(surveyId);
+        return ResultUtil.success(allAnswers);
     }
 
 }
