@@ -71,7 +71,6 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
                 optionDTOList.add(optionDTO);
             }
             questionDTO.setOptions(optionDTOList);
-            System.out.println(userAnswers);
             // 设置用户答案
             List<String> userAnswerList = new ArrayList<>();
             String[] userAnswerArray = userAnswers.split(",");
@@ -96,7 +95,6 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
         Set<String> uniqueSurveyUserIds = new HashSet<>();
         List<Answersheet> filteredAnswersheets = new ArrayList<>();
-
         for (Answersheet answersheet : allAnswersheets) {
             String surveyUserId = answersheet.getSurveyId() + "-" + answersheet.getUserId();
             if (!uniqueSurveyUserIds.contains(surveyUserId)) {
