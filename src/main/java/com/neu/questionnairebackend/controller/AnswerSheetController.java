@@ -37,7 +37,7 @@ public class AnswerSheetController {
     public BaseResponse<AnswerRequest> getAnswerById(int id, Integer userId) {
         if (id <= 0) throw new BusinessException(ErrorCode.PARAM_ERROR);
         else if (userId == null || userId <= 0 ){
-            throw new BusinessException(ErrorCode.PARAM_ERROR, "传入的userId为空或者小于等于0");
+            return ResultUtil.success(answersheetService.getAnswerById(id));
         }
         else {
             AnswerRequest answerById = answersheetService.getAnswerById(id);
