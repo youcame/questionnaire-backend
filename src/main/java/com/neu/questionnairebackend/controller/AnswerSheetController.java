@@ -51,12 +51,23 @@ public class AnswerSheetController {
         }
     }
 
+    /**
+     * 查看某个问卷所有的回答情况
+     * @param surveyId
+     * @return
+     */
     @GetMapping("/getAnswers")
     public BaseResponse<List<Answersheet>> getAnswers(Integer surveyId){
         List<Answersheet> allAnswers = answersheetService.getAllAnswers(surveyId);
         return ResultUtil.success(allAnswers);
     }
 
+    /**
+     * 记录用户提交的问卷
+     * @param recordRequest
+     * @param request
+     * @return
+     */
     @RequestMapping("/recordAnswer")
     public BaseResponse<Boolean> recordUserAnswer(@RequestBody RecordUserAnswerRequest recordRequest, HttpServletRequest request){
         if(recordRequest==null||request.getSession().getAttribute(USER_LOGIN_STATE)==null){
@@ -65,5 +76,6 @@ public class AnswerSheetController {
         answersheetService.recordUserAnswer(recordRequest);
         return ResultUtil.success(true);
     }
+
 
 }

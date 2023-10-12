@@ -96,6 +96,11 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         return answerById;
     }
 
+    /**
+     * 获取所有问卷回答的情况
+     * @param surveyId
+     * @return
+     */
     @Override
     public List<Answersheet> getAllAnswers(Integer surveyId) {
         List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
