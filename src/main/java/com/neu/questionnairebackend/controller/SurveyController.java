@@ -40,13 +40,16 @@ public class SurveyController {
      * @return  筛选之后的用户列表
      */
     @GetMapping("/search")
-    public BaseResponse<List<Survey>> getSurveyList(String surveyName, String surveyType, HttpServletRequest request){
+    public BaseResponse<List<Survey>> getSurveyList(String surveyName, String surveyType, Integer projectId,HttpServletRequest request){
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(surveyName)){
             queryWrapper.like("surveyName", surveyName);
         }
         if(StringUtils.isNotBlank(surveyType)){
             queryWrapper.like("surveyType", surveyType);
+        }
+        if(projectId!=null){
+            queryWrapper.like("projectId",projectId);
         }
         List<Survey> list = surveyService.list(queryWrapper);
         return ResultUtil.success(list);

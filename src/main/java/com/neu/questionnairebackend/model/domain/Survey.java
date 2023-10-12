@@ -28,6 +28,10 @@ public class Survey implements Serializable {
      * 问卷名称
      */
     private String surveyName;
+    /**
+     * 所属的项目
+     */
+    private Integer projectId;
 
     /**
      * 问卷描述

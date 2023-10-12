@@ -20,6 +20,7 @@
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="deleteTime" column="deleteTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+            <result property="projectId" column="projectId" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -27,6 +28,6 @@
         description,finishUserId,surveyStatus,
         url,canFinishTime,totalTimes,
         nowTimes,canFinishUserId,createTime,
-        updateTime,deleteTime,isDelete
+        updateTime,deleteTime,isDelete,projectId
     </sql>
 </mapper>

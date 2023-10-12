@@ -155,6 +155,7 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             survey.setSurveyType(4);
         }
         survey.setSurveyStatus(0);
+        survey.setProjectId(addSurveyRequest.getProjectId());
         survey.setSurveyName(addSurveyRequest.getSurveyName());
         survey.setDescription(addSurveyRequest.getSurveyDescription());
         survey.setUpdateTime(new Date());
