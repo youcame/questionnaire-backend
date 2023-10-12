@@ -103,6 +103,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
      */
     @Override
     public List<Answersheet> getAllAnswers(Integer surveyId) {
+        //查找所有问题回答
         List<Answersheet> allAnswersheets = answersheetMapper.selectList(null);
         Set<String> uniqueSurveyUserIds = new HashSet<>();
         List<Answersheet> filteredAnswersheets = new ArrayList<>();
@@ -124,6 +125,11 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
     public Boolean recordUserAnswer(RecordUserAnswerRequest answerRequest) {
         List<RecordUserAnswerRequest.Questions> list = answerRequest.getQuestions();
         int n=list.size();
+        QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("surveyId",answerRequest.getSurveyId());
+        queryWrapper.eq("userId",answerRequest.getId());
+        Long aLong = answersheetMapper.selectCount(queryWrapper);
+        if(aLong>0)throw new BusinessException(ErrorCode.PARAM_ERROR,"你已经填写过此问卷了");
         for(int i=0;i<n;i++){
             Answersheet answersheet = new Answersheet();
             answersheet.setUserId(answerRequest.getId());
