@@ -94,6 +94,7 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
             AddSurveyRequest.QuestionRequest questionRequest = new AddSurveyRequest.QuestionRequest();
             questionRequest.setQuestionDescription(question.getQuestionDescription());
             questionRequest.setQuestionType(question.getQuestionType());
+            questionRequest.setQuestionId(question.getId());
             List<AddSurveyRequest.QuestionRequest.OptionRequest> choicesRequests = new ArrayList<>();
             for (Choices choices : questionService.getChoices(question.getId())) {
                 AddSurveyRequest.QuestionRequest.OptionRequest choicesRequest = new AddSurveyRequest.QuestionRequest.OptionRequest();

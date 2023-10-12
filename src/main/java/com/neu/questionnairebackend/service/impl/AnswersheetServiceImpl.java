@@ -2,6 +2,8 @@ package com.neu.questionnairebackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.AnswersheetMapper;
 import com.neu.questionnairebackend.mapper.ChoicesMapper;
 import com.neu.questionnairebackend.mapper.QuestionMapper;
@@ -13,13 +15,17 @@ import com.neu.questionnairebackend.model.domain.Survey;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
 import com.neu.questionnairebackend.model.dto.AnswerRequest.QuestionDTO;
 import com.neu.questionnairebackend.model.dto.AnswerRequest.QuestionDTO.OptionDTO;
+import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
 import com.neu.questionnairebackend.service.AnswersheetService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answersheet> implements AnswersheetService {
 
     @Resource
@@ -107,5 +113,23 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             }
         }
         return filteredAnswersheets;
+    }
+
+    @Override
+    public Boolean recordUserAnswer(RecordUserAnswerRequest answerRequest) {
+        List<RecordUserAnswerRequest.Questions> list = answerRequest.getQuestions();
+        int n=list.size();
+        for(int i=0;i<n;i++){
+            Answersheet answersheet = new Answersheet();
+            answersheet.setUserId(answerRequest.getId());
+            answersheet.setUserAccount(answerRequest.getUserAccount());
+            answersheet.setSurveyId(answerRequest.getSurveyId());
+            String selectChoices = list.get(i).getAns().stream().map(String::valueOf).collect(Collectors.joining(","));
+            answersheet.setQuestionID(list.get(i).getId());
+            answersheet.setSelectChoices(selectChoices);
+            int insert = answersheetMapper.insert(answersheet);
+            if(insert<=0)throw new BusinessException(ErrorCode.SYSTEM_ERROR,"保存答案时出现错误");
+        }
+        return true;
     }
 }

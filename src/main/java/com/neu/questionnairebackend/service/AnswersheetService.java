@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.questionnairebackend.model.domain.Question;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
+import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface AnswersheetService extends IService<Answersheet> {
     AnswerRequest getAnswerById(int id);
     AnswerRequest getAnswerById(int id,Integer userId);
     List<Answersheet> getAllAnswers(Integer surveyId);
+    Boolean recordUserAnswer(RecordUserAnswerRequest answerRequest);
 }

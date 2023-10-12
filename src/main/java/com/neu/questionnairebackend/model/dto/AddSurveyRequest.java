@@ -16,6 +16,7 @@ public class AddSurveyRequest implements Serializable {
     @Data
     public static class QuestionRequest implements Serializable {
         private static final long serialVersionUID = 1L;
+        private Integer questionId;
         private String questionDescription;
         private List<OptionRequest> options;
         private Integer questionType;
