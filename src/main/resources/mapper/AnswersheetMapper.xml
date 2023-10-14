@@ -17,4 +17,5 @@
         id,userId,userAccount,
         questionID,surveyId,selectChoices
     </sql>
+
 </mapper>

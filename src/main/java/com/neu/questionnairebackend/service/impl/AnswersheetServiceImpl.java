@@ -70,6 +70,10 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             List<OptionDTO> optionDTOList = new ArrayList<>();
             List<Choices> choicesList = choicesMapper.selectList(
                     new QueryWrapper<Choices>().eq("questionId", question.getId()));
+
+            String statistic = this.getStatistic(question,choicesList.size());
+
+            //遍历选项的信息
             for (Choices choices : choicesList) {
                 OptionDTO optionDTO = new OptionDTO();
                 optionDTO.setId(choices.getId());
@@ -77,6 +81,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
                 optionDTOList.add(optionDTO);
             }
             questionDTO.setOptions(optionDTOList);
+            questionDTO.setStatistics(statistic);
             // 设置用户答案
             List<String> userAnswerList = new ArrayList<>();
             String[] userAnswerArray = userAnswers.split(",");
@@ -142,5 +147,25 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             if(insert<=0)throw new BusinessException(ErrorCode.SYSTEM_ERROR,"保存答案时出现错误");
         }
         return true;
+    }
+
+    /**
+     * 获取某个问题的答案信息
+     * @param question(问题对象),n(选项个数)
+     * @return
+     */
+    private String getStatistic(Question question,int n){
+        StringBuilder sb = new StringBuilder();
+        for(int i=1;i<=n;i++) {
+            int questionId = question.getId();
+            QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("questionId", questionId);
+            long total = this.count(queryWrapper);
+            queryWrapper.eq("selectChoices",String.valueOf(i));
+            long count = this.count(queryWrapper);
+            sb.append("选择"+(i==1?"A":i==2?"B":i==3?"C":i==4?"D":i==5?"E":"F")+"的人数为:"
+                    +String.valueOf(count)+",占比为:"+String.valueOf(count*1.0/total*100)+"%\n");
+        }
+        return sb.toString();
     }
 }

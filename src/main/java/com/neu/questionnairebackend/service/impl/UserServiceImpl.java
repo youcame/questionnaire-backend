@@ -123,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("password", encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"用户为空");
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"账号或者密码不正确");
         }
         User safeUser = this.getSafeUser(user);
         //记录登录态,传入的是一个user数据！！！
