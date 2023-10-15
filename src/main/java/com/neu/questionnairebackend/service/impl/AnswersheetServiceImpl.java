@@ -51,6 +51,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         Survey survey = surveyMapper.selectById(answersheet.getSurveyId());
         answerRequest.setSurveyName(survey.getSurveyName());
         answerRequest.setSurveyDescription(survey.getDescription());
+        answerRequest.setProjectId(survey.getProjectId());
         // 获取问题列表
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         List<Question> questionList = questionMapper.selectList(

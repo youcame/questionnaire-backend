@@ -41,7 +41,7 @@ public class Answersheet implements Serializable {
     private Integer surveyId;
 
     /**
-            * 选择的选项
+     * 选择的选项
      */
     private String selectChoices;
 

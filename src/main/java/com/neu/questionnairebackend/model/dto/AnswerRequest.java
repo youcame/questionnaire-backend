@@ -13,6 +13,7 @@ public class AnswerRequest {
     private String surveyName;
     private String surveyDescription;
     private List<QuestionDTO> questions;
+    private Integer projectId;
 
     @Data
     public static class QuestionDTO {

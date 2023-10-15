@@ -82,6 +82,7 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         addSurveyRequest.setSurveyName(survey.getSurveyName());
         addSurveyRequest.setSurveyDescription(survey.getDescription());
         addSurveyRequest.setSurveyType(survey.getSurveyType().toString());
+        addSurveyRequest.setProjectId(survey.getProjectId());
         if(survey.getSurveyType() == 1) {
             addSurveyRequest.setRelate(survey.getCanFinishTime());
         }
