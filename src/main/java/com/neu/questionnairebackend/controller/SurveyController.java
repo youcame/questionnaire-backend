@@ -40,10 +40,13 @@ public class SurveyController {
      * @return  筛选之后的用户列表
      */
     @GetMapping("/search")
-    public BaseResponse<List<Survey>> getSurveyList(String surveyName, String surveyType, Integer projectId,HttpServletRequest request){
+    public BaseResponse<List<Survey>> getSurveyList(String surveyName,String description, String surveyType, Integer projectId,HttpServletRequest request){
         QueryWrapper<Survey> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(surveyName)){
             queryWrapper.like("surveyName", surveyName);
+        }
+        if(StringUtils.isNotBlank(description)){
+            queryWrapper.like("description",description);
         }
         if(StringUtils.isNotBlank(surveyType)){
             queryWrapper.like("surveyType", surveyType);
@@ -93,9 +96,6 @@ public class SurveyController {
 
     @PostMapping("/create")
     public BaseResponse<Boolean> addSurvey(@RequestBody AddSurveyRequest addSurveyRequest, Integer id, HttpServletRequest request){
-        if(!UserAuthority.isAdmin(request)){
-            throw new BusinessException(ErrorCode.NO_AUTH);
-        }
         if(addSurveyRequest!=null && id==null){
             surveyService.addSurvey(addSurveyRequest);
         }

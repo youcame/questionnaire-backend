@@ -27,13 +27,16 @@ public class ProjectController {
     @Resource
     private ProjectService projectService;
     @GetMapping("/search")
-    public BaseResponse<List<Project>> getProjectList(String projectName, String projectDescription, HttpServletRequest request) {
+    public BaseResponse<List<Project>> getProjectList(String projectName, String projectDescription,String createBy, HttpServletRequest request) {
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(projectName)) {
             queryWrapper.like("projectName", projectName);
         }
         if (StringUtils.isNotBlank(projectDescription)) {
             queryWrapper.like("projectDescription", projectDescription);
+        }
+        if(StringUtils.isNotBlank(createBy)){
+            queryWrapper.like("createBy", createBy);
         }
         List<Project> list = projectService.list(queryWrapper);
         return ResultUtil.success(list);
@@ -42,7 +45,7 @@ public class ProjectController {
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteProject(@RequestBody Integer id, HttpServletRequest request) {
         if (!UserAuthority.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH);
+            throw new BusinessException(ErrorCode.NO_AUTH,"没权限");
         }
         if (id < 0) {
             throw new BusinessException(ErrorCode.PARAM_ERROR,"删除id为空");
@@ -54,8 +57,8 @@ public class ProjectController {
 
     @PostMapping("/update")
     public BaseResponse<Boolean> updateProject(@RequestBody Project project, HttpServletRequest request) {
-        if (project == null || !UserAuthority.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.PARAM_ERROR,"项目为空或者没权限");
+        if (project == null) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR,"项目为空");
         } else {
             boolean b = projectService.updateById(project);
             return ResultUtil.success(b);
@@ -66,9 +69,6 @@ public class ProjectController {
     public BaseResponse<Integer> createProject(@RequestBody Project project, HttpServletRequest request) {
         if (project == null) {
             throw new BusinessException(ErrorCode.PARAM_ERROR,"项目为空");
-        }
-        if(!UserAuthority.isAdmin(request)){
-            throw new BusinessException(ErrorCode.NO_AUTH);
         }
         int result = projectService.createProject(project.getProjectName(),
                 project.getProjectDescription(), UserAuthority.getCurrentUserAccount(request), project.getUserId());
