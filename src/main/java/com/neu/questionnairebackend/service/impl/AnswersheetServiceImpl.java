@@ -17,11 +17,14 @@ import com.neu.questionnairebackend.model.dto.AnswerRequest.QuestionDTO;
 import com.neu.questionnairebackend.model.dto.AnswerRequest.QuestionDTO.OptionDTO;
 import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
 import com.neu.questionnairebackend.service.AnswersheetService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +39,10 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
     private QuestionMapper questionMapper;
     @Resource
     private ChoicesMapper choicesMapper;
+    @Resource
+    private RedissonClient redissonClient;
 
     /**
-     *
      * @param answerId
      * @return 通过Answer的Id得到一个问卷的答案信息
      */
@@ -62,7 +66,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             questionDTO.setId(question.getId());
             questionDTO.setQuestionDescription(question.getQuestionDescription());
             QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("questionID",question.getId());
+            queryWrapper.eq("questionID", question.getId());
             queryWrapper.eq("surveyId", survey.getId());
             queryWrapper.eq("userAccount", answersheet.getUserAccount());
             Answersheet answersheet1 = answersheetMapper.selectOne(queryWrapper);
@@ -72,7 +76,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             List<Choices> choicesList = choicesMapper.selectList(
                     new QueryWrapper<Choices>().eq("questionId", question.getId()));
 
-            String statistic = this.getStatistic(question,choicesList.size());
+            String statistic = this.getStatistic(question, choicesList.size());
 
             //遍历选项的信息
             for (Choices choices : choicesList) {
@@ -98,12 +102,13 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
     public AnswerRequest getAnswerById(int id, Integer userId) {
         AnswerRequest answerById = this.getAnswerById(id);
         QueryWrapper<AnswerRequest> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userId",userId);
+        queryWrapper.eq("userId", userId);
         return answerById;
     }
 
     /**
      * 获取所有问卷回答的情况
+     *
      * @param surveyId
      * @return
      */
@@ -117,11 +122,10 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             String surveyUserId = answersheet.getSurveyId() + "-" + answersheet.getUserId();
             if (!uniqueSurveyUserIds.contains(surveyUserId)) {
                 uniqueSurveyUserIds.add(surveyUserId);
-                if(surveyId!=null) {
-                    if(answersheet.getSurveyId()!=surveyId)continue;
+                if (surveyId != null) {
+                    if (answersheet.getSurveyId() != surveyId) continue;
                     filteredAnswersheets.add(answersheet);
-                }
-                else filteredAnswersheets.add(answersheet);
+                } else filteredAnswersheets.add(answersheet);
             }
         }
         return filteredAnswersheets;
@@ -130,42 +134,57 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
     @Override
     public Boolean recordUserAnswer(RecordUserAnswerRequest answerRequest) {
         List<RecordUserAnswerRequest.Questions> list = answerRequest.getQuestions();
-        int n=list.size();
-        QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("surveyId",answerRequest.getSurveyId());
-        queryWrapper.eq("userId",answerRequest.getId());
-        Long aLong = answersheetMapper.selectCount(queryWrapper);
-        if(aLong>0)throw new BusinessException(ErrorCode.PARAM_ERROR,"你已经填写过此问卷了");
-        for(int i=0;i<n;i++){
-            Answersheet answersheet = new Answersheet();
-            answersheet.setUserId(answerRequest.getId());
-            answersheet.setUserAccount(answerRequest.getUserAccount());
-            answersheet.setSurveyId(answerRequest.getSurveyId());
-            String selectChoices = list.get(i).getAns().stream().map(String::valueOf).collect(Collectors.joining(","));
-            answersheet.setQuestionID(list.get(i).getId());
-            answersheet.setSelectChoices(selectChoices);
-            int insert = answersheetMapper.insert(answersheet);
-            if(insert<=0)throw new BusinessException(ErrorCode.SYSTEM_ERROR,"保存答案时出现错误");
+        int n = list.size();
+        Integer surveyId = answerRequest.getSurveyId();
+        Long answerRequestId = answerRequest.getId();
+        String lockName = String.format("survey:submit:%s:%s", surveyId, answerRequestId);
+        RLock lock = redissonClient.getLock(lockName);
+        try {
+            if (lock.tryLock(0, 30000L, TimeUnit.MILLISECONDS)) {
+                QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("surveyId", surveyId);
+                queryWrapper.eq("userId", answerRequestId);
+                Long aLong = answersheetMapper.selectCount(queryWrapper);
+                if (aLong > 0) throw new BusinessException(ErrorCode.PARAM_ERROR, "你已经填写过此问卷了");
+                for (int i = 0; i < n; i++) {
+                    Answersheet answersheet = new Answersheet();
+                    answersheet.setUserId(answerRequestId);
+                    answersheet.setUserAccount(answerRequest.getUserAccount());
+                    answersheet.setSurveyId(surveyId);
+                    String selectChoices = list.get(i).getAns().stream().map(String::valueOf).collect(Collectors.joining(","));
+                    answersheet.setQuestionID(list.get(i).getId());
+                    answersheet.setSelectChoices(selectChoices);
+                    int insert = answersheetMapper.insert(answersheet);
+                    if (insert <= 0) throw new BusinessException(ErrorCode.SYSTEM_ERROR, "保存答案时出现错误");
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }finally {
+            if(lock.isHeldByCurrentThread()){
+                lock.unlock();
+            }
         }
         return true;
     }
 
     /**
      * 获取某个问题的答案信息
+     *
      * @param question(问题对象),n(选项个数)
      * @return
      */
-    private String getStatistic(Question question,int n){
+    private String getStatistic(Question question, int n) {
         StringBuilder sb = new StringBuilder();
-        for(int i=1;i<=n;i++) {
+        for (int i = 1; i <= n; i++) {
             int questionId = question.getId();
             QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("questionId", questionId);
             long total = this.count(queryWrapper);
-            queryWrapper.eq("selectChoices",String.valueOf(i));
+            queryWrapper.eq("selectChoices", String.valueOf(i));
             long count = this.count(queryWrapper);
-            sb.append("选择"+(i==1?"A":i==2?"B":i==3?"C":i==4?"D":i==5?"E":"F")+"的人数为:"
-                    +String.valueOf(count)+",占比为:"+String.format("%.2f",(count*1.0/total*100))+"%\n");
+            sb.append("选择" + (i == 1 ? "A" : i == 2 ? "B" : i == 3 ? "C" : i == 4 ? "D" : i == 5 ? "E" : "F") + "的人数为:"
+                    + String.valueOf(count) + ",占比为:" + String.format("%.2f", (count * 1.0 / total * 100)) + "%\n");
         }
         return sb.toString();
     }
