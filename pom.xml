@@ -61,6 +61,12 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.12.0</version>
     </dependency>
+    <!--redission-->
+    <dependency>
+      <groupId>org.redisson</groupId>
+      <artifactId>redisson</artifactId>
+      <version>3.24.3</version>
+    </dependency>
     <dependency>
       <groupId>com.baomidou</groupId>
       <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -75,6 +81,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <!-- swagger-ui Knife4j，只需要导入这一个依赖就好了，无需在添加spring-fox的依赖 -->
+    <dependency>
+      <groupId>com.github.xiaoymin</groupId>
+      <artifactId>knife4j-spring-boot-starter</artifactId>
+      <version>2.0.7</version>
     </dependency>
   </dependencies>
   <build>

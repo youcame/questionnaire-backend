@@ -17,7 +17,9 @@ spring:
     host: localhost
     database: 4
     timeout: 60000
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 server:
   port: 8102
   servlet:
