@@ -184,7 +184,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             queryWrapper.eq("selectChoices", String.valueOf(i));
             long count = this.count(queryWrapper);
             sb.append("选择" + (i == 1 ? "A" : i == 2 ? "B" : i == 3 ? "C" : i == 4 ? "D" : i == 5 ? "E" : "F") + "的人数为:"
-                    + String.valueOf(count) + ",占比为:" + String.format("%.2f", (count * 1.0 / total * 100)) + "%\n");
+                    + count + ",占比为:" + String.format("%.2f", (count * 1.0 / total * 100)) + "%\n");
         }
         return sb.toString();
     }

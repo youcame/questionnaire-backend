@@ -20,10 +20,17 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  rabbitmq:
+    host: localhost
+    port: 15672
+    password: guest
+    username: guest
+
 server:
   port: 8102
   servlet:
     context-path: /api
+
 
 mybatis-plus:
   configuration:

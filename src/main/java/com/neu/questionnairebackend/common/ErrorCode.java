@@ -7,7 +7,8 @@ public enum ErrorCode {
     NO_AUTH(40101,"没权限", ""),
     ACCOUNT_SAME(40101,"重复性错误", ""),
     PARAM_NULL(40001,"请求得到的数据不存在",""),
-    SYSTEM_ERROR(50000, "系统内部异常", "");
+    SYSTEM_ERROR(50000, "系统内部异常", ""),
+    OPERATION_ERROR(50001, "操作失败","");
     private int code;
     private String message;
     private String description;
