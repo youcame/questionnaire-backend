@@ -18,7 +18,6 @@ import com.neu.questionnairebackend.mapper.SurveyMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author HUANG
@@ -169,6 +168,11 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         queryWrapper.eq("surveyId", surveyId);
         List<Question> questions = questionMapper.selectList(queryWrapper);
         return questions;
+    }
+
+    @Override
+    public Void getAiAnswer(int surveyId) {
+        return null;
     }
 }
 

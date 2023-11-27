@@ -29,4 +29,5 @@ public interface SurveyService extends IService<Survey> {
 
     Survey getSurveyFromRequest(AddSurveyRequest addSurveyRequest);
     List<Question> getQuestions(int surveyId);
+    Void getAiAnswer(int surveyId);
 }

@@ -78,7 +78,7 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
             List<OptionDTO> optionDTOList = new ArrayList<>();
             List<Choices> choicesList = choicesMapper.selectList(
                     new QueryWrapper<Choices>().eq("questionId", question.getId()));
-
+            //获取统计信息
             String statistic = this.getStatistic(question, choicesList.size());
 
             //遍历选项的信息

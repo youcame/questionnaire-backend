@@ -1,14 +1,18 @@
 package com.neu.questionnairebackend.controller;
 
+import com.neu.questionnairebackend.Authority.UserAuthority;
+import com.neu.questionnairebackend.bizmq.SurveyMessageProducer;
 import com.neu.questionnairebackend.common.BaseResponse;
 import com.neu.questionnairebackend.common.ErrorCode;
 import com.neu.questionnairebackend.common.ResultUtil;
 import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.AnswersheetMapper;
 import com.neu.questionnairebackend.model.domain.Answersheet;
+import com.neu.questionnairebackend.model.domain.Survey;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
 import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
 import com.neu.questionnairebackend.service.AnswersheetService;
+import com.neu.questionnairebackend.service.SurveyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +33,12 @@ public class AnswerSheetController {
     @Resource
     AnswersheetService answersheetService;
     @Resource
+    SurveyService surveyService;
+    @Resource
+    SurveyMessageProducer surveyMessageProducer;
+    @Resource
     AnswersheetMapper answersheetMapper;
+
 
     /**
      *
@@ -73,6 +82,16 @@ public class AnswerSheetController {
             throw new BusinessException(ErrorCode.PARAM_ERROR,"未接收到答案或未登录");
         }
         answersheetService.recordUserAnswer(recordRequest);
+        return ResultUtil.success(true);
+    }
+
+    @GetMapping("/ai/mq")
+    public BaseResponse<Boolean> getAiResponse(Integer surveyId,HttpServletRequest request){
+        boolean admin = UserAuthority.isAdmin(request);
+        if(!admin){
+            throw new BusinessException(ErrorCode.NO_AUTH,"目前仅供管理员使用哦~");
+        }
+        surveyMessageProducer.sendMessageAnalyse(surveyId);
         return ResultUtil.success(true);
     }
 

@@ -7,7 +7,7 @@ import com.neu.questionnairebackend.constant.AiConstant;
 
 public class AiTest {
     public static void main(String[] args) {
-        String question = "问题：你对问卷给出几分？大部分人选择了5分";
+        String question = "[你对问卷给出几分]:[1人选择了'5分'][1人选择了'0分']\\n";
         String jsonString = "{"
                 + "\"model\": \"" + AiConstant.MODEL + "\","
                 + "\"messages\": ["

@@ -18,4 +18,10 @@
         questionID,surveyId,selectChoices
     </sql>
 
+<!--    <select id="getStatisticAnswerSheet" parameterType="int" resultMap="com.neu.questionnairebackend.model.domain.Answersheet">-->
+<!--        select questionId,selectChoices-->
+<!--        from answersheet-->
+<!--        where surveyId=#{id}-->
+<!--        group by questionID-->
+<!--    </select>-->
 </mapper>
