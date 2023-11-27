@@ -9,6 +9,8 @@
             <result property="surveyType" column="surveyType" jdbcType="INTEGER"/>
             <result property="surveyName" column="surveyName" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="aiStatistic" column="aiStatistic" jdbcType="VARCHAR"/>
+            <result property="aiStatus" column="aiStatus" jdbcType="VARCHAR"/>
             <result property="finishUserId" column="finishUserId" jdbcType="BIGINT"/>
             <result property="surveyStatus" column="surveyStatus" jdbcType="INTEGER"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
