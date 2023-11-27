@@ -1,6 +1,5 @@
 package com.neu.questionnairebackend.controller;
 
-import com.neu.questionnairebackend.Authority.UserAuthority;
 import com.neu.questionnairebackend.common.BaseResponse;
 import com.neu.questionnairebackend.common.ErrorCode;
 import com.neu.questionnairebackend.common.ResultUtil;

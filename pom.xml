@@ -73,6 +73,12 @@
       <artifactId>spring-session-data-redis</artifactId>
       <version>2.7.3</version>
     </dependency>
+    <!-- https://hutool.cn/docs/index.html#/-->
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+      <version>5.8.8</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -111,6 +117,11 @@
       <groupId>com.github.xiaoymin</groupId>
       <artifactId>knife4j-spring-boot-starter</artifactId>
       <version>2.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.theokanning.openai-gpt3-java</groupId>
+      <artifactId>service</artifactId>
+      <version>0.12.0</version>
     </dependency>
   </dependencies>
   <build>

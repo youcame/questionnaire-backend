@@ -19,4 +19,8 @@ public interface AnswersheetService extends IService<Answersheet> {
     AnswerRequest getAnswerById(int id,Integer userId);
     List<Answersheet> getAllAnswers(Integer surveyId);
     Boolean recordUserAnswer(RecordUserAnswerRequest answerRequest);
+
+    String getStatistic(Question question, int n);
+
+    String getAiStatic(String request, String openAiApiKey);
 }

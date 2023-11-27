@@ -1,6 +1,9 @@
 package com.neu.questionnairebackend.service.impl;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.questionnairebackend.common.ErrorCode;
 import com.neu.questionnairebackend.exception.BusinessException;
@@ -174,7 +177,8 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
      * @param question(问题对象),n(选项个数)
      * @return
      */
-    private String getStatistic(Question question, int n) {
+    @Override
+    public String getStatistic(Question question, int n) {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= n; i++) {
             int questionId = question.getId();
@@ -188,4 +192,20 @@ public class AnswersheetServiceImpl extends ServiceImpl<AnswersheetMapper, Answe
         }
         return sb.toString();
     }
+
+    @Override
+    public String getAiStatic(String request,String openAiApiKey){
+        if (StringUtils.isBlank(openAiApiKey)) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR, "未传 openAiApiKey");
+        }
+        String url = "https://api.openai.com/v1/chat/completions";
+        String json = JSONUtil.toJsonStr(request);
+        String result = HttpRequest.post(url)
+                .header("Authorization", "Bearer " + openAiApiKey)
+                .body(json)
+                .execute()
+                .body();
+        return null;
+    }
+
 }
