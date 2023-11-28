@@ -26,5 +26,8 @@ public class UserAuthority {
         User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         return user.getUserAccount();
     }
+    public static final User getLoginUser(HttpServletRequest request){
+        return (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+    }
 
 }

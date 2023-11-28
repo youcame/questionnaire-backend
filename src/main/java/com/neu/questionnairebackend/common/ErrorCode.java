@@ -6,6 +6,7 @@ public enum ErrorCode {
     NO_LOGIN(40100,"未登录",""),
     NO_AUTH(40101,"没权限", ""),
     ACCOUNT_SAME(40101,"重复性错误", ""),
+    TO_MANY_REQUEST(42900,"请求次数过多", ""),
     PARAM_NULL(40001,"请求得到的数据不存在",""),
     SYSTEM_ERROR(50000, "系统内部异常", ""),
     OPERATION_ERROR(50001, "操作失败","");

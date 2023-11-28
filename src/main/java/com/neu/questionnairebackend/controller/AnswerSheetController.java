@@ -6,15 +6,18 @@ import com.neu.questionnairebackend.common.BaseResponse;
 import com.neu.questionnairebackend.common.ErrorCode;
 import com.neu.questionnairebackend.common.ResultUtil;
 import com.neu.questionnairebackend.exception.BusinessException;
+import com.neu.questionnairebackend.manager.RedisLimiterManager;
 import com.neu.questionnairebackend.mapper.AnswersheetMapper;
 import com.neu.questionnairebackend.model.domain.Answersheet;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.domain.User;
 import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
 import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
 import com.neu.questionnairebackend.model.vo.AiFrontendVo;
 import com.neu.questionnairebackend.service.AnswersheetService;
 import com.neu.questionnairebackend.service.SurveyService;
+import com.neu.questionnairebackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.neu.questionnairebackend.constant.UserConstant.ADMIN_ROLE;
 import static com.neu.questionnairebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 @RestController
@@ -40,8 +44,7 @@ public class AnswerSheetController {
     @Resource
     SurveyMessageProducer surveyMessageProducer;
     @Resource
-    AnswersheetMapper answersheetMapper;
-
+    RedisLimiterManager redisLimiterManager;
 
     /**
      *
@@ -95,11 +98,12 @@ public class AnswerSheetController {
      * @return
      */
     @GetMapping("/ai/mq")
-    public BaseResponse<Boolean> getAiResponse(Integer surveyId,HttpServletRequest request){
-        boolean admin = UserAuthority.isAdmin(request);
-        if(!admin){
+    public BaseResponse<Boolean> sendAiResponse(Integer surveyId,HttpServletRequest request){
+        User loginUser = UserAuthority.getLoginUser(request);
+        if(!(ADMIN_ROLE == loginUser.getUserRole())){
             throw new BusinessException(ErrorCode.NO_AUTH,"目前仅供管理员使用哦~");
         }
+        redisLimiterManager.doLimit("getAiRequest_"+ loginUser.getId());
         surveyMessageProducer.sendMessageAnalyse(surveyId);
         return ResultUtil.success(true);
     }
