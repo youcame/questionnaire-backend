@@ -54,6 +54,12 @@ public class SurveyMessageConsumer {
         QueryWrapper<Answersheet> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("surveyId", id);
         List<Answersheet> one = answersheetService.list(queryWrapper);
+        if(one.size()==0){
+            survey.setAiStatus(AiStatus.FAILED);
+            surveyService.updateById(survey);
+            channel.basicNack(deliveryTag,false,false);
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
+        }
         AnswerRequest request = answersheetService.getAnswerById(one.get(0).getId());
         List<AnswerRequest.QuestionDTO> questions = request.getQuestions();
         for (AddSurveyRequest.QuestionRequest questionRequest : addQuestion) {
