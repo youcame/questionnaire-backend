@@ -74,6 +74,7 @@ public class SurveyMessageConsumer {
         if(StringUtils.isBlank(response)){
             survey.setAiStatus(AiStatus.FAILED);
             surveyService.updateById(survey);
+            channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.OPERATION_ERROR,"gpt生成错误");
         }
         survey.setAiStatistic(response);
@@ -82,6 +83,7 @@ public class SurveyMessageConsumer {
         if(!b){
             survey.setAiStatus(AiStatus.FAILED);
             surveyService.updateById(survey);
+            channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.OPERATION_ERROR,"gpt生成错误");
         }
         channel.basicAck(deliveryTag,false);

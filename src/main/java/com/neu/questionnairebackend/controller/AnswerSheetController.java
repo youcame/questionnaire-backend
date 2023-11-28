@@ -101,7 +101,7 @@ public class AnswerSheetController {
     public BaseResponse<Boolean> sendAiResponse(Integer surveyId,HttpServletRequest request){
         User loginUser = UserAuthority.getLoginUser(request);
         if(!(ADMIN_ROLE == loginUser.getUserRole())){
-            throw new BusinessException(ErrorCode.NO_AUTH,"目前仅供管理员使用哦~");
+            throw new BusinessException(ErrorCode.NO_AUTH,"目前对管理员和vip用户开放哦~");
         }
         redisLimiterManager.doLimit("getAiRequest_"+ loginUser.getId());
         surveyMessageProducer.sendMessageAnalyse(surveyId);
