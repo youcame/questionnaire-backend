@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class MqCreateJob {
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 22 * * *")
     public void doMqCreateJob(){
         try {
             ConnectionFactory factory = new ConnectionFactory();
