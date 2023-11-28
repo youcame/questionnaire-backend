@@ -2,6 +2,7 @@ package com.neu.questionnairebackend.bizmq;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neu.questionnairebackend.common.ErrorCode;
+import com.neu.questionnairebackend.constant.AiStatus;
 import com.neu.questionnairebackend.constant.SurveyMqConstant;
 import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.model.domain.Answersheet;
@@ -13,7 +14,6 @@ import com.neu.questionnairebackend.service.SurveyService;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -42,7 +42,8 @@ public class SurveyMessageConsumer {
         }
         int id = Integer.parseInt(message);
         Survey survey = surveyService.getById(id);
-        survey.setAiStatus("running");
+        survey.setAiStatus(AiStatus.RUNNING);
+        surveyService.updateById(survey);
         //问题列表
         AddSurveyRequest surveyRequest = surveyService.getSurveyById(id);
         List<AddSurveyRequest.QuestionRequest> addQuestion = surveyRequest.getAddQuestion();
@@ -57,8 +58,8 @@ public class SurveyMessageConsumer {
         List<AnswerRequest.QuestionDTO> questions = request.getQuestions();
         for (AddSurveyRequest.QuestionRequest questionRequest : addQuestion) {
             questionNum++;
-            sb.append("第").append(questionNum).append("题:");
-            sb.append("题目为:").append(questionRequest.getQuestionDescription()).append("\\n");
+            //sb.append("第").append(questionNum).append("题:");
+            sb.append("题目:").append(questionRequest.getQuestionDescription()).append("\\n");
             List<AddSurveyRequest.QuestionRequest.OptionRequest> options = questionRequest.getOptions();
             for (AddSurveyRequest.QuestionRequest.OptionRequest option : options) {
                 optionNum++;
@@ -70,7 +71,21 @@ public class SurveyMessageConsumer {
             optionNum=0;
         }
         String response = AiUtil.getResponse(sb.toString());
-        System.out.println(response);
+        if(StringUtils.isBlank(response)){
+            survey.setAiStatus(AiStatus.FAILED);
+            surveyService.updateById(survey);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"gpt生成错误");
+        }
+        survey.setAiStatistic(response);
+        survey.setAiStatus(AiStatus.FINISH);
+        boolean b = surveyService.updateById(survey);
+        if(!b){
+            survey.setAiStatus(AiStatus.FAILED);
+            surveyService.updateById(survey);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"gpt生成错误");
+        }
+        channel.basicAck(deliveryTag,false);
+        System.out.println(sb);
     }
 
 }

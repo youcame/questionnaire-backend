@@ -9,11 +9,14 @@ import com.neu.questionnairebackend.exception.BusinessException;
 import com.neu.questionnairebackend.mapper.AnswersheetMapper;
 import com.neu.questionnairebackend.model.domain.Answersheet;
 import com.neu.questionnairebackend.model.domain.Survey;
+import com.neu.questionnairebackend.model.dto.AddSurveyRequest;
 import com.neu.questionnairebackend.model.dto.AnswerRequest;
 import com.neu.questionnairebackend.model.dto.RecordUserAnswerRequest;
+import com.neu.questionnairebackend.model.vo.AiFrontendVo;
 import com.neu.questionnairebackend.service.AnswersheetService;
 import com.neu.questionnairebackend.service.SurveyService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,6 +88,12 @@ public class AnswerSheetController {
         return ResultUtil.success(true);
     }
 
+    /**
+     * 获取ai回复的请求
+     * @param surveyId
+     * @param request
+     * @return
+     */
     @GetMapping("/ai/mq")
     public BaseResponse<Boolean> getAiResponse(Integer surveyId,HttpServletRequest request){
         boolean admin = UserAuthority.isAdmin(request);
@@ -93,6 +102,19 @@ public class AnswerSheetController {
         }
         surveyMessageProducer.sendMessageAnalyse(surveyId);
         return ResultUtil.success(true);
+    }
+
+    /**
+     * 查询ai回复的请求
+     * @param surveyId
+     * @return
+     */
+    @GetMapping("/get/ai")
+    public BaseResponse<AiFrontendVo> getAiResponse(Integer surveyId){
+        AiFrontendVo aiFrontendVo = new AiFrontendVo();
+        Survey survey = surveyService.getById(surveyId);
+        BeanUtils.copyProperties(survey,aiFrontendVo);
+        return ResultUtil.success(aiFrontendVo);
     }
 
 

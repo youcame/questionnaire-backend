@@ -170,10 +170,6 @@ public class SurveyServiceImpl extends ServiceImpl<SurveyMapper, Survey>
         return questions;
     }
 
-    @Override
-    public Void getAiAnswer(int surveyId) {
-        return null;
-    }
 }
 
 
