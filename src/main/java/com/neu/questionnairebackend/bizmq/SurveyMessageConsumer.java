@@ -93,7 +93,6 @@ public class SurveyMessageConsumer {
             throw new BusinessException(ErrorCode.OPERATION_ERROR,"gpt生成错误");
         }
         channel.basicAck(deliveryTag,false);
-        System.out.println(sb);
     }
 
 }
